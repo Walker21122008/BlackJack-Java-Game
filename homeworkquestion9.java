@@ -3,7 +3,7 @@ public class homeworkquestion9{
 	public static void main(String[] args){
 		Console con = new Console();
         // User inputs the celcius value
-        con.println("Enter the Celcius value: ");
+        con.println("Enter the Celsius value: ");
         double dblCelcius;//celcius variable
         dblCelcius = con.readDouble();
 
