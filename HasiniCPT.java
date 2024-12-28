@@ -866,7 +866,7 @@ public class HasiniCPT {
 				scoreBoardList.println(strUser);
 				scoreBoardList.println(intMoney);
                 System.out.println("Hasi Goodbye");  //Debug statement
-                return false;
+                
             }
         }
     }
