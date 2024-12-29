@@ -943,7 +943,8 @@ public class HasiniCPT {
 		}
 
 		// Print the rank
-		con.drawString("Rank: " + rank, 500, 700);
+		con.drawString(String.valueOf(rank), 500, 640);
+
 	}
 
 	// Bubble sort method for descending order
