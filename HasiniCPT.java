@@ -42,17 +42,48 @@ public class HasiniCPT {
     private static BufferedImage imgBackButton;
     private static BufferedImage imgFinalBoard;
     private static BufferedImage imgMoneyWithBet;
-    
+    private static BufferedImage imgHelpButton;
+    private static BufferedImage imgHelp1;
+    private static BufferedImage imgHelp2;
+    private static BufferedImage imgHelp3;
+    private static BufferedImage imgHelp4;
+    private static BufferedImage imgHelp5;
+    private static BufferedImage imgHelp6;
+    private static BufferedImage imgHelp7;
+    private static BufferedImage imgHelp8;
+    private static BufferedImage imgHelp9;
+    private static BufferedImage imgHelp10;
+    private static BufferedImage imgHelp11;
+    private static BufferedImage imgHelp12;
+    private static BufferedImage imgHelp13;
+    private static BufferedImage imgHelp14;
+    private static BufferedImage imgHelp15;
     
     public static void main(String[] args) {
         Console con = new Console("Valentina Moretti", 1280, 720);
         Color darkGray = Color.decode("#262927");
         BufferedImage main1 = con.loadImage("main1.png");
+        imgHelpButton = con.loadImage("helpButton.png");
         BufferedImage main2 = con.loadImage("main2.png");
         BufferedImage play = con.loadImage("play.png");
         BufferedImage quit = con.loadImage("quit.png");
         imgTie = con.loadImage("imgTie.png");
         imgTie1 = con.loadImage("imgTie1.png");
+        imgHelp1 = con.loadImage("helpFromCreator/help1.png");
+        imgHelp2 = con.loadImage("helpFromCreator/help2.png");
+        imgHelp3 = con.loadImage("helpFromCreator/help3.png");
+        imgHelp4 = con.loadImage("helpFromCreator/help4.png");
+        imgHelp5 = con.loadImage("helpFromCreator/help5.png");
+        imgHelp6 = con.loadImage("helpFromCreator/help6.png");
+        imgHelp7 = con.loadImage("helpFromCreator/help7.png");
+        imgHelp8 = con.loadImage("helpFromCreator/help8.png");
+        imgHelp9 = con.loadImage("helpFromCreator/help9.png");
+        imgHelp10 = con.loadImage("helpFromCreator/help10.png");
+        imgHelp11 = con.loadImage("helpFromCreator/help11.png");
+        imgHelp12 = con.loadImage("helpFromCreator/help12.png");
+        imgHelp13 = con.loadImage("helpFromCreator/help13.png");
+        imgHelp14 = con.loadImage("helpFromCreator/help14.png");
+        imgHelp15 = con.loadImage("helpFromCreator/help15.png");
         BufferedImage high = con.loadImage("high.png");
         BufferedImage moneyBonus = con.loadImage("bonusmoney.png");
         imgMoneyBoard = con.loadImage("moneyCount.png");
@@ -86,6 +117,7 @@ public class HasiniCPT {
             con.drawImage(play, 500, 200);
             con.drawImage(high, 500, 370);
             con.drawImage(quit, 500, 540);
+            con.drawImage(imgHelpButton, 1170, 610);
             con.repaint();
 
             // If Play button is clicked
@@ -445,6 +477,8 @@ public class HasiniCPT {
 				con.sleep(16); // Add a small delay to prevent excessive CPU usage
 			}
 			// The code will continue to the main game loop after exiting the while loop
+		}else if(isButtonClicked(con, 1170, 610, 110, 110)){//help button code
+			con.println("hello");
 		}
         else if (isButtonClicked(con, 500, 540, 400, 150)) {
                     con.println("Quit button clicked");
@@ -949,7 +983,10 @@ public class HasiniCPT {
 		con.drawString(String.valueOf(rank), 500, 650);
 
 	}
-
+	private static void helpButton(Console con){
+		con.drawImage(imgHelp1, 0, 0);
+		con.repaint();
+	}
 	// Bubble sort method for descending order
 	private static void bubbleSortDescending(double[] arr) {
 		for (int i = 0; i < arr.length - 1; i++) {

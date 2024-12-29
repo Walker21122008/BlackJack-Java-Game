@@ -12,8 +12,6 @@ hahaha
 2803
 hasini
 825.0
-ddjks
-992.0
 sdjd
 977.0
 statitan
@@ -28,3 +26,5 @@ repp
 992.0
 holasoydora
 921.0
+STATITAN
+2100.0
