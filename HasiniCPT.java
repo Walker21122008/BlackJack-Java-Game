@@ -40,6 +40,7 @@ public class HasiniCPT {
     private static ArrayList<String> names;
     private static ArrayList<Double> scores;
     private static BufferedImage imgBackButton;
+    private static BufferedImage imgFinalBoard;
     
     
     public static void main(String[] args) {
@@ -56,6 +57,7 @@ public class HasiniCPT {
         imgMoneyBoard = con.loadImage("moneyCount.png");
         imgScoreBoard = con.loadImage("scoreBoard.png");
         imgBackButton = con.loadImage("back_button.png");
+        imgFinalBoard = con.loadImage("finalBoard.png");
         int intCountMainPage = 0;
         scoreBoardList = new TextOutputFile("scoreBoardList.txt", true);
 
@@ -410,7 +412,7 @@ public class HasiniCPT {
 						con.closeConsole();
 				} else if (isButtonClicked(con, 800, 600, 200, 50)) {
 					con.println("Goodbye");
-					System.exit(0); // Exit the program if "Maybe not" is clicked
+					//System.exit(0); // Exit the program if "Maybe not" is clicked
 				}
 			
 			con.sleep(16); // Short sleep to prevent excessive CPU usage
@@ -865,11 +867,99 @@ public class HasiniCPT {
             } else if (isButtonClicked(con, 800, 600, 200, 50)) {
 				scoreBoardList.println(strUser);
 				scoreBoardList.println(intMoney);
-                System.out.println("Hasi Goodbye");  //Debug statement
+                System.out.println("Hasi Goodbye"); //debug statement
+                boolean bringScoreBoard = true;
+				while (bringScoreBoard) {
+					con.drawImage(imgFinalBoard, 0, 0);
+					con.repaint();
+					scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+					names = new ArrayList<>();
+					scores = new ArrayList<>();
+					readScoresFromFile();
+					sortScores();
+					displayScoresFinal(con);
+					searchUserAndPrintRank(con);
+					con.repaint();
+
+					con.sleep(16); // Add a small delay to prevent excessive CPU usage
+				}
                 
             }
         }
     }
+    
+    private static void displayScoresFinal(Console con) {
+        for (int i = 0; i < Math.min(5, scores.size()); i++) {
+			con.setDrawColor(Color.WHITE);
+            con.drawString(names.get(i) + ": " + scores.get(i), 300, 180 + i * 80);
+            con.repaint();
+        }
+        for (int i = 5; i < Math.min(10, scores.size()); i++) {
+			con.setDrawColor(Color.WHITE);
+            con.drawString(names.get(i) + ": " + scores.get(i), 790, 180 + (i - 5) * 80);
+            con.repaint();
+        }
+    }
+	
+	private static void searchUserAndPrintRank(Console con) {
+		// First pass: count the number of users
+		int userCount = 0;
+		scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+		while (!scoreBoardListInput.eof()) {
+			scoreBoardListInput.readLine(); // name
+			scoreBoardListInput.readLine(); // money
+			userCount++;
+		}
+		scoreBoardListInput.close();
+
+		// Create array with exact size
+		double[] allMoney = new double[userCount];
+
+		// Second pass: populate the array and find user's money
+		double userMoney = -1;
+		int index = 0;
+		scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+		while (!scoreBoardListInput.eof()) {
+			String strName = scoreBoardListInput.readLine();
+			String strMoney = scoreBoardListInput.readLine();
+			allMoney[index] = Double.parseDouble(strMoney);
+			if (strName.equalsIgnoreCase(strUser)) {
+				userMoney = allMoney[index];
+			}
+			index++;
+		}
+		scoreBoardListInput.close();
+
+		// Bubble sort the money array in descending order
+		bubbleSortDescending(allMoney);
+
+		// Find the user's rank
+		int rank = 1;
+		for (int i = 0; i < allMoney.length; i++) {
+			if (allMoney[i] == userMoney) {
+				break;
+			}
+			rank++;
+		}
+
+		// Print the rank
+		con.drawString("Rank: " + rank, 500, 700);
+	}
+
+	// Bubble sort method for descending order
+	private static void bubbleSortDescending(double[] arr) {
+		for (int i = 0; i < arr.length - 1; i++) {
+			for (int j = 0; j < arr.length - i - 1; j++) {
+				if (arr[j] < arr[j + 1]) {
+					// Swap elements
+					double temp = arr[j];
+					arr[j] = arr[j + 1];
+					arr[j + 1] = temp;
+				}
+			}
+		}
+	}
+
 
     private static void resetGameState() {
         cardIndex = 0;
