@@ -46,7 +46,6 @@ public class HasiniCPT {
     private static BufferedImage imgHelp1;
     private static BufferedImage imgHelp2;
     private static BufferedImage imgHelp3;
-    private static BufferedImage imgHelp4;
     private static BufferedImage imgHelp5;
     private static BufferedImage imgHelp6;
     private static BufferedImage imgHelp7;
@@ -72,7 +71,6 @@ public class HasiniCPT {
         imgHelp1 = con.loadImage("helpFromCreator/help1.png");
         imgHelp2 = con.loadImage("helpFromCreator/help2.png");
         imgHelp3 = con.loadImage("helpFromCreator/help3.png");
-        imgHelp4 = con.loadImage("helpFromCreator/help4.png");
         imgHelp5 = con.loadImage("helpFromCreator/help5.png");
         imgHelp6 = con.loadImage("helpFromCreator/help6.png");
         imgHelp7 = con.loadImage("helpFromCreator/help7.png");
@@ -477,8 +475,10 @@ public class HasiniCPT {
 				con.sleep(16); // Add a small delay to prevent excessive CPU usage
 			}
 			// The code will continue to the main game loop after exiting the while loop
+			
 		}else if(isButtonClicked(con, 1170, 610, 110, 110)){//help button code
-			con.println("hello");
+			handleHelpButton(con);
+			
 		}
         else if (isButtonClicked(con, 500, 540, 400, 150)) {
                     con.println("Quit button clicked");
@@ -983,10 +983,50 @@ public class HasiniCPT {
 		con.drawString(String.valueOf(rank), 500, 650);
 
 	}
-	private static void helpButton(Console con){
-		con.drawImage(imgHelp1, 0, 0);
-		con.repaint();
+	private static void handleHelpButton(Console con) {
+		BufferedImage[] helpImages = {
+			imgHelp1, imgHelp2, imgHelp3, imgHelp5,
+			imgHelp6, imgHelp7, imgHelp8, imgHelp9, imgHelp10,
+			imgHelp11, imgHelp12, imgHelp13, imgHelp14, imgHelp15
+		};
+		
+		int currentImageIndex = 0;
+		
+		while (currentImageIndex < helpImages.length) {
+			con.clear();
+			con.drawImage(helpImages[currentImageIndex], 0, 0);
+			con.repaint();
+			
+			if (currentImageIndex == 8) { // At imgHelp10
+				con.setTextColor(Color.WHITE);
+				con.repaint();
+				String input = con.readLine();
+				
+				if (input.equals("13")) {
+					currentImageIndex = 11; // Show imgHelp11
+					con.drawImage(imgHelp11, 0, 0);
+					con.repaint();
+					con.sleep(2000);
+				} else {
+					currentImageIndex = 10; // Show imgHelp12
+					con.sleep(1000);
+				}
+			} else {
+				while (true) {
+					int key = con.currentChar();
+					if (key == 10) { // Enter key
+						System.out.println("Debug: currentImageIndex = " + currentImageIndex);  //Debug statement
+						currentImageIndex++;
+						con.sleep(1000);
+						break;
+					}
+				}
+			}
+			
+		}
 	}
+
+
 	// Bubble sort method for descending order
 	private static void bubbleSortDescending(double[] arr) {
 		for (int i = 0; i < arr.length - 1; i++) {
