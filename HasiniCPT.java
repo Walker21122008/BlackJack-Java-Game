@@ -41,6 +41,7 @@ public class HasiniCPT {
     private static ArrayList<Double> scores;
     private static BufferedImage imgBackButton;
     private static BufferedImage imgFinalBoard;
+    private static BufferedImage imgMoneyWithBet;
     
     
     public static void main(String[] args) {
@@ -58,6 +59,7 @@ public class HasiniCPT {
         imgScoreBoard = con.loadImage("scoreBoard.png");
         imgBackButton = con.loadImage("back_button.png");
         imgFinalBoard = con.loadImage("finalBoard.png");
+        imgMoneyWithBet = con.loadImage("moneyWithBet.png");
         int intCountMainPage = 0;
         scoreBoardList = new TextOutputFile("scoreBoardList.txt", true);
 
@@ -711,8 +713,9 @@ public class HasiniCPT {
 
     private static void drawScene(Console con) {
         con.drawImage(board, 0, 0);
-        con.drawImage(imgMoneyBoard, 0, 0);
+        con.drawImage(imgMoneyWithBet, 0, 0);
 		con.drawString("$" + String.valueOf(intMoney), 1080, 50);
+		con.drawString("$" + String.valueOf(intValue), 1100, 256);
         displayDealerCards(con);
         displayPlayerCards(con);
         if (playerTurn && playerTotal < 21) {
@@ -943,7 +946,7 @@ public class HasiniCPT {
 		}
 
 		// Print the rank
-		con.drawString(String.valueOf(rank), 500, 640);
+		con.drawString(String.valueOf(rank), 500, 650);
 
 	}
 
