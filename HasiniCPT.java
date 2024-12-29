@@ -16,6 +16,7 @@ public class HasiniCPT {
     private static final int CARD_WIDTH = 100;
     private static final int CARD_SPACING = 20;
     private static BufferedImage board;
+    private static BufferedImage imgMaybeNot;
     private static BufferedImage cardBack;
     private static int playerTotal = 0;
     private static int dealerTotal = 0;
@@ -68,6 +69,7 @@ public class HasiniCPT {
         BufferedImage quit = con.loadImage("quit.png");
         imgTie = con.loadImage("imgTie.png");
         imgTie1 = con.loadImage("imgTie1.png");
+        imgMaybeNot = con.loadImage("maybeNot.png");
         imgHelp1 = con.loadImage("helpFromCreator/help1.png");
         imgHelp2 = con.loadImage("helpFromCreator/help2.png");
         imgHelp3 = con.loadImage("helpFromCreator/help3.png");
@@ -444,8 +446,14 @@ public class HasiniCPT {
 						con.closeConsole();
 				} else if (isButtonClicked(con, 800, 600, 200, 50)) {
 					con.println("Goodbye");
+					con.drawImage(imgMaybeNot, 0, 0);
+					con.repaint();
+					con.sleep(2000);
+					playEndingAnimation(con);
 					//System.exit(0); // Exit the program if "Maybe not" is clicked
+					break;
 				}
+				
 			
 			con.sleep(16); // Short sleep to prevent excessive CPU usage
 		}  // while !button clicked
@@ -488,6 +496,40 @@ public class HasiniCPT {
         con.sleep(16); // Approximately 60 FPS
         }  // main while running = true
     }
+    private static void playEndingAnimation(Console con) {
+		BufferedImage miniStoryBoard = con.loadImage("miniStoryBoard.png");
+				BufferedImage val_pix = con.loadImage("pix_val.png");
+				BufferedImage nico_pix = con.loadImage("pix_nico.png");
+				BufferedImage nico_pix_1 = con.loadImage("pix_nico_1.png");
+		int x = 900;
+		int y = 0;
+		int nico_x = 800;
+		int nico_y = 0;
+		int speed = 5; // Assuming a speed value, adjust as needed
+
+		while (y < 250) {
+			y += speed;
+			con.drawImage(miniStoryBoard, 0, 0);
+			con.drawImage(imgMoneyBoard, 0, 0);
+			con.drawString("$" + String.valueOf(intMoney), 1080, 50);
+			con.drawImage(val_pix, x, y);
+			con.drawImage(nico_pix, nico_x, nico_y);
+			con.repaint();
+			con.sleep(16);
+		} 
+
+		while (x > 0) {
+			x -= speed; // Changed += to -= to move left
+			con.drawImage(miniStoryBoard, 0, 0);
+			con.drawImage(imgMoneyBoard, 0, 0);
+			con.drawString("$" + String.valueOf(intMoney), 1080, 50);
+			con.drawImage(val_pix, x, y);
+			con.drawImage(nico_pix, nico_x, nico_y);
+			con.repaint();
+			con.sleep(16); // Approximately 60 FPS
+		}
+	}
+
 	private static void readScoresFromFile() {
         while (!scoreBoardListInput.eof()) {
             names.add(scoreBoardListInput.readLine());
@@ -823,6 +865,7 @@ public class HasiniCPT {
     }
 
     private static void doubleDown(Console con, String[][] deck) {
+		intValue = intValue*2;
         hitCard(con, deck);
         if (playerTotal > 21) {
             determineWinner(con);
