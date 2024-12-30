@@ -32,3 +32,5 @@ gilli vijay
 1500.0
 ja
 0.0
+hasini
+1000.0

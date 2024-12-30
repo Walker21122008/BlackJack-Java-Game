@@ -1,3 +1,14 @@
+/*
+ * 
+ * Name: BlackJack 
+ * File Name: HasiniCPT.java
+ * By: Hasini Vijay Inbasri
+ * Date Created: Dec 21, 2024
+ * Purpose: Fan-made game for the Webtoon comic - The Mafia Nanny focusing on Blackjack
+ * 
+ */
+ 
+ //import libraries
 import arc.*;
 import java.util.Scanner;
 import java.awt.Color;
@@ -7,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HasiniCPT {
+	//Initializing global variables for the images, variables and lists
 	private static int cardIndex = 0;
 	private static double intMoney;
     private static List<BufferedImage> playerCards = new ArrayList<>();
@@ -58,7 +70,10 @@ public class HasiniCPT {
     private static BufferedImage imgHelp13;
     private static BufferedImage imgHelp14;
     private static BufferedImage imgHelp15;
+    private static BufferedImage noMoney1;
+    private static BufferedImage noMoney2;
     
+    //Main game start
     public static void main(String[] args) {
         Console con = new Console("Valentina Moretti", 1280, 720);
         Color darkGray = Color.decode("#262927");
@@ -91,17 +106,19 @@ public class HasiniCPT {
         imgBackButton = con.loadImage("back_button.png");
         imgFinalBoard = con.loadImage("finalBoard.png");
         imgMoneyWithBet = con.loadImage("moneyWithBet.png");
+        noMoney1 = con.loadImage("noMoney1.png");
+        noMoney2 = con.loadImage("noMoney2.png");
         int intCountMainPage = 0;
         scoreBoardList = new TextOutputFile("scoreBoardList.txt", true);
 
         // Main animation loop
-        while (intCountMainPage < 7) {
+        while (intCountMainPage < 5) {
             con.drawImage(main1, 0, 0);
             con.repaint();
-            con.sleep(500);
+            con.sleep(300);
             con.drawImage(main2, 0, 0);
             con.repaint();
-            con.sleep(500);
+            con.sleep(300);
             intCountMainPage++;
         }
 
@@ -122,6 +139,8 @@ public class HasiniCPT {
 
             // If Play button is clicked
             if (isButtonClicked(con, 500, 200, 400, 150)) {
+				
+				//load images
 				BufferedImage miniStoryBoard = con.loadImage("miniStoryBoard.png");
 				BufferedImage val_pix = con.loadImage("pix_val.png");
 				BufferedImage nico_pix = con.loadImage("pix_nico.png");
@@ -149,13 +168,18 @@ public class HasiniCPT {
 				BufferedImage normalUser = con.loadImage("normal_user.png"); 
 				
 				con.clear(); // Clear the console before each iteration
+				
+				//User enter's their username
 				con.drawImage(normalUser, 0, 0); // Redraw the image
 				con.repaint();
-				con.setTextColor(darkGray);
+				con.setTextColor(Color.WHITE);
+				con.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			    con.print("						");
 				strUser = con.readLine();
 				
 				//Cheatcode - statitan gets $2000.  Other users gets only $1000
 				if(strUser.equalsIgnoreCase("statitan")) {
+					        con.clear();
 							con.drawImage(statitan, 0, 0);
 							con.repaint();
 							intMoney = 2000;
@@ -164,23 +188,31 @@ public class HasiniCPT {
 				}else{
 					con.drawImage(normalUser, 0, 0);
 					intMoney = 1000;
-					con.drawString(strUser, 600, 400);
 					con.sleep(2000);
 				}
+				con.clear();
+				
+				//pixel gameboard for starting the story
 				con.drawImage(instructionboard, 0, 0);
 				
+				//initialize variables for the positions of the pixel characters
 				int x = 200;
 				int y = 250;
 				int speed = 5;
+				
+				//setting the boundaries for the characters to move
 				int topBoundary = 150;
 				int bottomBoundary = 600 - val_pix.getHeight();
 				int leftBoundary = 0;
 				int rightBoundary = 600 - val_pix.getWidth();
+				
+				//drawing the characters
 				con.drawImage(nico_pix, 580, 250);
 				con.drawImage(val_pix, x, y);
 				con.repaint();
 				con.sleep(5000);
 				
+				//does this loop while the x value of the val pizel character is not equal to the right boundary variable
 				while (x != rightBoundary) {
 					con.clear();
 					con.drawImage(miniStoryBoard, 0, 0);
@@ -189,7 +221,8 @@ public class HasiniCPT {
 					con.drawImage(nico_pix, 580, 250);
 					con.drawImage(val_pix, x, y);
 					con.repaint();
-
+					
+					//key controls to move the character to meet nico
 					int key = con.getKey();
 					if (key == 38 && y > topBoundary) 
 					{
@@ -207,7 +240,8 @@ public class HasiniCPT {
 
 					con.sleep(16);
 				}
-        
+         
+				//start of story board
 				con.sleep(1000);
 				con.drawImage(val0, 0, 0);
 				con.drawImage(imgMoneyBoard, 0, 0);
@@ -269,26 +303,43 @@ public class HasiniCPT {
 				con.drawString("$" + String.valueOf(intMoney), 1080, 50);
 				con.repaint();
 				con.sleep(2000);
-        
+            
+            //user has an option to either choose "Sure, let's play" or "maybe not"
 			boolean buttonClicked = false;
 			while (!buttonClicked) {
-				con.setDrawColor(Color.RED);
-				con.fillRect(490, 600, 200, 50);
+				int mouseX = con.currentMouseX();
+				int mouseY = con.currentMouseY();
+				
+				// Sure, let's play button
+				if (mouseX >= 490 && mouseX <= 690 && mouseY >= 600 && mouseY <= 650) {
+					con.setDrawColor(Color.GREEN);
+				} else {
+					con.setDrawColor(Color.RED);
+				}
+				con.fillRect(480, 600, 220, 50);
 				con.setDrawColor(Color.BLACK);
-				con.drawRect(490, 600, 200, 50);
-				con.drawString("Sure Lets play!", 510, 610);
-				con.repaint();
-				con.setDrawColor(Color.RED);
+				con.drawRect(480, 600, 220, 50);
+				con.drawString("Sure, let's play!", 490, 610);
+
+				// Maybe not button
+				if (mouseX >= 800 && mouseX <= 1000 && mouseY >= 600 && mouseY <= 650) {
+					con.setDrawColor(Color.GREEN);
+				} else {
+					con.setDrawColor(Color.RED);
+				}
 				con.fillRect(800, 600, 200, 50);
 				con.setDrawColor(Color.BLACK);
 				con.drawRect(800, 600, 200, 50);
 				con.drawString("Maybe not", 810, 610);
+
 				con.repaint();
 
 				// Lets Play button clicked
 				if (isButtonClicked(con, 490, 600, 200, 50)) {
 						con.setDrawColor(Color.WHITE);
 						buttonClicked = true;
+						
+						//goes to the pixel game board and does an animation to move nico
 						con.drawImage(miniStoryBoard, 0, 0);
 						con.drawImage(imgMoneyBoard, 0, 0);
 					    con.drawString("$" + String.valueOf(intMoney), 1080, 50);
@@ -297,17 +348,20 @@ public class HasiniCPT {
 						con.repaint();
 						int nico_x = 580;
 						int nico_y = 250;
+						
+						//x-coordinates changes to move nico to the desired location
 						while (nico_x < 800) {
-							nico_x += speed; // Move the button to the middle animation
+							nico_x += speed; 
 							con.drawImage(miniStoryBoard, 0, 0);
 							con.drawImage(imgMoneyBoard, 0, 0);
 					        con.drawString("$" + String.valueOf(intMoney), 1080, 50);
 							con.drawImage(val_pix, x, 200);
 							con.drawImage(nico_pix_1, nico_x, 250);
 							con.repaint();
-							con.sleep(16); // Approximately 60 FPS
+							con.sleep(16); 
 						}
-							
+						
+						//y-coordinates changes to move nico to the desired location
 						while(nico_y > 0){
 							nico_y -= speed;
 							con.drawImage(miniStoryBoard, 0, 0);
@@ -320,6 +374,8 @@ public class HasiniCPT {
 						}     
 						con.drawImage(nico_pix, nico_x, nico_y);
 						con.repaint(); 
+						
+						//x-coordinates changes to move valentina to the desired location
 						while (x < 900) {
 							x += speed; // Move the button to the middle animation
 							con.drawImage(miniStoryBoard, 0, 0);
@@ -331,6 +387,7 @@ public class HasiniCPT {
 							con.sleep(16); // Approximately 60 FPS
 						}
 							
+						//y-coordinates changes to move valentina to the desired location
 						while(y > 0){
 							y -= speed;
 							con.drawImage(miniStoryBoard, 0, 0);
@@ -341,6 +398,8 @@ public class HasiniCPT {
 							con.repaint();
 							con.sleep(16);
 						}     
+						
+						//if statement to change the storyboard according to whether the user has $1000 or $2000
 						con.sleep(1000);
 						if(intMoney == 1000){
 							con.drawImage(val12, 0, 0);
@@ -355,6 +414,8 @@ public class HasiniCPT {
 							con.repaint();
 							con.sleep(2000);
 						}
+						
+						//continuition of story board
 						con.drawImage(nico13, 0, 0);
 						con.drawImage(imgMoneyBoard, 0, 0);
 					    con.drawString("$" + String.valueOf(intMoney), 1080, 50);
@@ -377,16 +438,19 @@ public class HasiniCPT {
 						con.sleep(2000);
 						
 						
-						//Game starts here
+						//Main BlackJack Game starts here
 						
-						con.clear(); // Clear the console before each iteration
-						con.drawImage(val16, 0, 0); // Redraw the image
+						con.clear(); 
+						con.drawImage(val16, 0, 0); 
 						con.drawImage(imgMoneyBoard, 0, 0);
 						con.drawString("$" + String.valueOf(intMoney), 1080, 50);
 						con.setTextColor(darkGray);
 						
+						//User types their bet and the statement prevents the user from typing a number over their allocated money amount or a character which is not a number
 						do {
-							con.setTextColor(darkGray);
+							con.setTextColor(Color.WHITE);
+							con.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			                con.print("						       ");
 							String input = con.readLine();
 							try {
 								intValue = Integer.parseInt(input);
@@ -434,7 +498,8 @@ public class HasiniCPT {
 						imgLose = con.loadImage("lose.png");
 						imgWin = con.loadImage("win.png");
 						imgValPlayAgain = con.loadImage("page6.png");
-
+						
+						//initializes the game
 						playAgain = true;
 						resetGameState ();
 						while (playAgain) {
@@ -444,13 +509,17 @@ public class HasiniCPT {
 							}
 						}
 						con.closeConsole();
+						
+				//when maybe not button is clicked
+				//exits the program after a small animation
 				} else if (isButtonClicked(con, 800, 600, 200, 50)) {
 					con.println("Goodbye");
 					con.drawImage(imgMaybeNot, 0, 0);
 					con.repaint();
 					con.sleep(2000);
 					playEndingAnimation(con);
-					//System.exit(0); // Exit the program if "Maybe not" is clicked
+					con.sleep(2000);
+					System.exit(0); 
 					break;
 				}
 				
@@ -462,6 +531,8 @@ public class HasiniCPT {
         
         // Code for High Score Button
         else if (isButtonClicked(con, 500, 370, 400, 150)) {
+			
+			//reads the list and goes to the required methods to find the top 10 scores and display them
 			boolean bringScoreBoard = true;
 			while (bringScoreBoard) {
 				con.drawImage(imgScoreBoard, 0, 0);
@@ -480,22 +551,27 @@ public class HasiniCPT {
 					break; // Exit the while loop
 				}
 
-				con.sleep(16); // Add a small delay to prevent excessive CPU usage
+				con.sleep(16); 
 			}
 			// The code will continue to the main game loop after exiting the while loop
-			
+		
+		//help button when clicked goes to the help screens
 		}else if(isButtonClicked(con, 1170, 610, 110, 110)){//help button code
 			handleHelpButton(con);
 			
 		}
+		
+		//when quit button is clicked, it automatically exits the game
         else if (isButtonClicked(con, 500, 540, 400, 150)) {
                     con.println("Quit button clicked");
                     running = false; // Exit the game loop
         }
 
-        con.sleep(16); // Approximately 60 FPS
+        con.sleep(16); 
         }  // main while running = true
     }
+    
+    //ending animation when maybe not is clicked
     private static void playEndingAnimation(Console con) {
 		BufferedImage miniStoryBoard = con.loadImage("miniStoryBoard.png");
 				BufferedImage val_pix = con.loadImage("pix_val.png");
@@ -530,6 +606,7 @@ public class HasiniCPT {
 		}
 	}
 
+    //reads scores from scoreBoardList.txt
 	private static void readScoresFromFile() {
         while (!scoreBoardListInput.eof()) {
             names.add(scoreBoardListInput.readLine());
@@ -538,6 +615,7 @@ public class HasiniCPT {
         scoreBoardListInput.close();
     }
 
+    //sorts scores using the bubble sort algorithm
     private static void sortScores() {
         for (int i = 0; i < scores.size() - 1; i++) {
             for (int j = 0; j < scores.size() - i - 1; j++) {
@@ -555,6 +633,7 @@ public class HasiniCPT {
         }
     }
 
+    //displays the scores on the high score banner page --> only ranks 1 - 10
     private static void displayScores(Console con) {
         for (int i = 0; i < Math.min(5, scores.size()); i++) {
 			con.setDrawColor(Color.WHITE);
@@ -567,21 +646,24 @@ public class HasiniCPT {
             con.repaint();
         }
     }
+    
+    //animates the play button
     private static void animateButton(Console con, BufferedImage background, BufferedImage button, int y) {
         int x = 1280;
         while (x > 500) {
-            x -= 10;
+            x -= 30;
             con.drawImage(background, 0, 0);
             con.drawImage(button, x, y);
             con.repaint();
             con.sleep(16);
         }
     }
-
+    
+    //animates the high score button
     private static void animateButton(Console con, BufferedImage background, BufferedImage button1, BufferedImage button2, int y) {
         int x = 1280;
         while (x > 500) {
-            x -= 10;
+            x -= 30;
             con.drawImage(background, 0, 0);
             con.drawImage(button1, 500, 200);
             con.drawImage(button2, x, y);
@@ -589,11 +671,12 @@ public class HasiniCPT {
             con.sleep(16);
         }
     }
-
+    
+    //animates the quit button
     private static void animateButton(Console con, BufferedImage background, BufferedImage button1, BufferedImage button2, BufferedImage button3, int y) {
         int x = 1280;
         while (x > 500) {
-            x -= 10;
+            x -= 30;
             con.drawImage(background, 0, 0);
             con.drawImage(button1, 500, 200);
             con.drawImage(button2, 500, 370);
@@ -603,12 +686,17 @@ public class HasiniCPT {
         }
     }
 
+    //To determine whether the button in the input coordinates is clicked or not
     private static boolean isButtonClicked(Console con, int x, int y, int width, int height) {
         int mouseX = con.currentMouseX();
         int mouseY = con.currentMouseY();
         return con.currentMouseButton() == 1 && mouseX >= x && mouseX <= (x + width) && mouseY >= y && mouseY <= (y + height);
     }
+    
+    //Method for the main gameplay
     private static boolean playGame(Console con) {
+		
+		//initializes the array
         String[][] deck = new String[52][4];
         String[] suits = {"D", "C", "H", "S"};
         String[] values = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
@@ -617,11 +705,13 @@ public class HasiniCPT {
         shuffleDeck(deck);
         dealInitialCards(con, deck);
         drawScene(con);
-
+        
+        //if the player total is already 21, it goes to the determine winner method
         if (playerTotal == 21) {
             determineWinner(con);
         }
-
+        
+        //while game is not ended, it runs the player turn method and determines the logic for when the hit button, stand button or double down button is clicked
         while (!gameEnded) {
             if (playerTurn) {
                 if (isHitButtonClicked(con) && playerTotal < 21) {
@@ -645,7 +735,8 @@ public class HasiniCPT {
 
         return askPlayAgain(con);
     }
-
+	
+	//initializes the deck of cards
     private static void initializeDeck(String[][] deck, String[] suits, String[] values) {
         int index = 0;
         for (String suit : suits) {
@@ -659,7 +750,7 @@ public class HasiniCPT {
         }
     }
 
-
+    //gets the card value for each card
     private static int getCardValue(String value) {
         switch (value) {
             case "A":
@@ -672,7 +763,8 @@ public class HasiniCPT {
                 return Integer.parseInt(value);
         }
     }
-
+    
+    //algorithm to shuffle the deck of cards
     private static void shuffleDeck(String[][] deck) {
         for (int i = deck.length - 1; i > 0; i--) {
             int j = (int)(Math.random() * (i + 1));
@@ -681,7 +773,8 @@ public class HasiniCPT {
             deck[j] = temp;
         }
     }
-
+	
+	//deals the first 2 cards for the player and the dealer
     private static void dealInitialCards(Console con, String[][] deck) {
         for (int i = 0; i < 2; i++) {
             playerCards.add(loadCardImage(con, deck[cardIndex][3]));
@@ -697,6 +790,7 @@ public class HasiniCPT {
         canDoubleDown = (playerTotal == 9 || playerTotal == 10 || playerTotal == 11);
     }
 
+	//when the user plays "hit"
     private static void hitCard(Console con, String[][] deck) {
         BufferedImage newCard = loadCardImage(con, deck[cardIndex][3]);
         playerCards.add(newCard);
@@ -704,8 +798,10 @@ public class HasiniCPT {
         playerTotal = reCalculateTotal(playerCardValues);
         cardIndex++;
         animateCardShuffle(con);
+        canDoubleDown = false;
     }
 
+	//recalculates the total for the special case which is the ace
     private static int reCalculateTotal(List<String> cardValues) {
         int total = 0;
         int aceCount = 0;
@@ -729,6 +825,7 @@ public class HasiniCPT {
         return total;
     }
 
+	//method when it is time for the dealer's turn
     private static void dealerTurn(Console con, String[][] deck) {
         drawScene(con);
         while (dealerTotal < 17 || dealerTotal < playerTotal) {
@@ -743,6 +840,7 @@ public class HasiniCPT {
         determineWinner(con);
     }
 
+    //if statement to determine the winner after the game is finished
     private static void determineWinner(Console con) {
         if (playerTotal == dealerTotal && playerTotal <= 21) {
             intMoney = intMoney;
@@ -772,6 +870,7 @@ public class HasiniCPT {
         drawScene(con);
     }
 
+	//animates the card when the player presses hit to move the cards to the side
     private static void animateCardShuffle(Console con) {
         int totalWidth = (playerCards.size() - 1) * (CARD_WIDTH + CARD_SPACING);
         int startX = 640 - totalWidth / 2;
@@ -786,7 +885,8 @@ public class HasiniCPT {
         }
         drawScene(con);
     }
-
+	
+	//draws the scene for the gameplay
     private static void drawScene(Console con) {
         con.drawImage(board, 0, 0);
         con.drawImage(imgMoneyWithBet, 0, 0);
@@ -805,6 +905,7 @@ public class HasiniCPT {
         con.repaint();
     }
 
+	//displays the player's cards
     private static void displayPlayerCards(Console con) {
         int totalWidth = (playerCards.size() - 1) * (CARD_WIDTH + CARD_SPACING);
         int startX = 640 - totalWidth / 2;
@@ -813,6 +914,7 @@ public class HasiniCPT {
         }
     }
 
+	//display's the dealer's cards
     private static void displayDealerCards(Console con) {
         con.drawImage(dealerCards.get(0), 500, 0);
         if (playerTurn) {
@@ -824,10 +926,12 @@ public class HasiniCPT {
         }
     }
 
+	//loads the image
     private static BufferedImage loadCardImage(Console con, String imagePath) {
         return con.loadImage(imagePath);
     }
 
+	//draws the hit button
     private static void drawHitButton(Console con) {
         con.setDrawColor(Color.RED);
         con.fillRect(900, 600, 100, 50);
@@ -835,7 +939,8 @@ public class HasiniCPT {
         con.drawRect(900, 600, 100, 50);
         con.drawString("HIT", 935, 610);
     }
-
+	
+	//draws the stand button
     private static void drawStandButton(Console con) {
         con.setDrawColor(Color.GREEN);
         con.fillRect(1020, 600, 100, 50);
@@ -843,7 +948,8 @@ public class HasiniCPT {
         con.drawRect(1020, 600, 100, 50);
         con.drawString("STAND", 1045, 610);
     }
-
+	
+	//draws the double down button
     private static void drawDoubleDownButton(Console con) {
         con.setDrawColor(Color.BLUE);
         con.fillRect(1140, 600, 100, 50);
@@ -852,18 +958,22 @@ public class HasiniCPT {
         con.drawString("DOUBLE", 1160, 610);
     }
 
+	//method for when hit button is clicked
     private static boolean isHitButtonClicked(Console con) {
         return con.currentMouseButton() == 1 && con.currentMouseX() >= 900 && con.currentMouseX() <= 1000 && con.currentMouseY() >= 600 && con.currentMouseY() <= 650;
     }
 
+	//method for when stand button is clicked
     private static boolean isStandButtonClicked(Console con) {
         return con.currentMouseButton() == 1 && con.currentMouseX() >= 1020 && con.currentMouseX() <= 1120 && con.currentMouseY() >= 600 && con.currentMouseY() <= 650;
     }
 
+    //method for when double down button is clicked
     private static boolean isDoubleDownButtonClicked(Console con) {
         return con.currentMouseButton() == 1 && con.currentMouseX() >= 1140 && con.currentMouseX() <= 1240 && con.currentMouseY() >= 600 && con.currentMouseY() <= 650;
     }
 
+	//method for when double down is clicked
     private static void doubleDown(Console con, String[][] deck) {
 		intValue = intValue*2;
         hitCard(con, deck);
@@ -871,103 +981,146 @@ public class HasiniCPT {
             determineWinner(con);
         }
     }
-
+    
+    //displays the player and dealer total
     private static void displayTotals(Console con) {
         con.setDrawColor(Color.WHITE);
-        con.drawString("Player Total: " + playerTotal, 10, 700);
+        con.drawString("Player Total: " + playerTotal, 10, 690);
         if (!playerTurn || gameEnded) {
-            con.drawString("Dealer Total: " + dealerTotal, 10, 680);
+            con.drawString("Dealer Total: " + dealerTotal, 10, 670);
         }
     }
 
+	//method to ask the user to play again
     private static boolean askPlayAgain(Console con) {
+    if (intMoney > 0) {
         con.clear();
-        con.drawImage(imgValPlayAgain, 0, 0); //not showing up
-		con.repaint();
-        
-			
-        con.setDrawColor(Color.RED);
-        con.fillRect(490, 600, 200, 50);
-        con.setDrawColor(Color.BLACK);
-        con.drawRect(490, 600, 200, 50);
-        con.drawString("Sure Let's play!", 500, 610);
+        con.drawImage(imgValPlayAgain, 0, 0);
 
-        con.setDrawColor(Color.RED);
-        con.fillRect(800, 600, 200, 50);
-        con.setDrawColor(Color.BLACK);
-        con.drawRect(800, 600, 200, 50);
-        con.drawString("Maybe not", 810, 610);
-
-        con.repaint();
         while (true) {
-            if (isButtonClicked(con, 490, 600, 200, 50)) {
-                resetGameState();
-                con.drawImage(val16, 0, 0); // Redraw the image
-									con.drawImage(imgMoneyBoard, 0, 0);
-									con.drawString("$" + String.valueOf(intMoney), 1080, 50);
-									con.setTextColor(Color.WHITE);
-									con.repaint();
-									Color darkGray = Color.decode("#262927");
-									
-                do {
-							con.setTextColor(darkGray);
-							String input = con.readLine();
-							try {
-								intValue = Integer.parseInt(input);
-							
-								if (intValue > intMoney) {
-									con.drawImage(val16, 0, 0); // Redraw the image
-									con.drawImage(imgMoneyBoard, 0, 0);
-									con.drawString("$" + String.valueOf(intMoney), 1080, 50);
-									con.setTextColor(Color.WHITE);
-									con.drawString("Value must be less than or equal to " + intMoney + ". Try again.", 550, 650);
-									con.repaint();
-									con.sleep(2000);
-									con.drawImage(val16, 0, 0); // Redraw the image
-									con.drawImage(imgMoneyBoard, 0, 0);
-									con.drawString("$" + String.valueOf(intMoney), 1080, 50);
-									con.repaint();
-								}
-							} catch (NumberFormatException e) {
-								con.drawImage(val16, 0, 0); // Redraw the image
-									con.drawImage(imgMoneyBoard, 0, 0);
-									con.drawString("$" + String.valueOf(intMoney), 1080, 50);
-								intValue = 9999;
-								con.setTextColor(Color.WHITE);
-								con.drawString("Invalid input. Please enter a number.", 550, 650);
-								con.repaint();
-								con.sleep(2000);
-									con.drawImage(val16, 0, 0); // Redraw the image
-									con.drawImage(imgMoneyBoard, 0, 0);
-									con.drawString("$" + String.valueOf(intMoney), 1080, 50);
-									con.repaint();
-							}
-						} while (intValue > intMoney);
-                return true;
-            } else if (isButtonClicked(con, 800, 600, 200, 50)) {
-				scoreBoardList.println(strUser);
-				scoreBoardList.println(intMoney);
-                System.out.println("Hasi Goodbye"); //debug statement
-                boolean bringScoreBoard = true;
-				while (bringScoreBoard) {
-					con.drawImage(imgFinalBoard, 0, 0);
-					con.repaint();
-					scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
-					names = new ArrayList<>();
-					scores = new ArrayList<>();
-					readScoresFromFile();
-					sortScores();
-					displayScoresFinal(con);
-					searchUserAndPrintRank(con);
-					con.repaint();
+            int mouseX = con.currentMouseX();
+            int mouseY = con.currentMouseY();
 
-					con.sleep(16); // Add a small delay to prevent excessive CPU usage
-				}
-                
+            // Sure, let's play button
+            if (mouseX >= 480 && mouseX <= 700 && mouseY >= 600 && mouseY <= 650) {
+                con.setDrawColor(Color.GREEN);
+            } else {
+                con.setDrawColor(Color.RED);
             }
+            con.fillRect(480, 600, 220, 50);
+            con.setDrawColor(Color.BLACK);
+            con.drawRect(480, 600, 220, 50);
+            con.drawString("Sure, let's play!", 490, 610);
+
+            // Maybe not button
+            if (mouseX >= 800 && mouseX <= 1000 && mouseY >= 600 && mouseY <= 650) {
+                con.setDrawColor(Color.GREEN);
+            } else {
+                con.setDrawColor(Color.RED);
+            }
+            con.fillRect(800, 600, 200, 50);
+            con.setDrawColor(Color.BLACK);
+            con.drawRect(800, 600, 200, 50);
+            con.drawString("Maybe not", 810, 610);
+
+            con.repaint();
+
+            if (isButtonClicked(con, 480, 600, 220, 50)) {
+                resetGameState();
+                drawGameScreen(con);
+                return getValidBet(con);
+            } else if (isButtonClicked(con, 800, 600, 200, 50)) {
+                saveScore(strUser, intMoney);
+                showScoreboard(con);
+                return false;
+            }
+
+            con.sleep(16); // Add a small delay to prevent excessive CPU usage
         }
+    } else {
+        con.drawImage(noMoney1, 0, 0);
+        con.repaint();
+        con.sleep(2000);
+        con.drawImage(noMoney2, 0, 0);
+        con.repaint();
+        con.sleep(2000);
+        System.out.println("Exiting");
+        return false;
     }
-    
+}
+
+
+
+	//draws the screen to get the user's bet
+	private static void drawGameScreen(Console con) {
+		con.drawImage(val16, 0, 0);
+		con.drawImage(imgMoneyBoard, 0, 0);
+		con.drawString("$" + intMoney, 1080, 50);
+		con.setTextColor(Color.WHITE);
+		con.repaint();
+	}
+
+    //Method to get the user's bet
+	private static boolean getValidBet(Console con) {
+		do {
+			con.setTextColor(Color.WHITE);
+			con.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			con.print("						       ");
+			String input = con.readLine();
+			try {
+				intValue = Integer.parseInt(input);
+				if (intValue > intMoney) {
+					displayErrorMessage(con, "Value must be less than or equal to " + intMoney + ". Try again.");
+				}
+			} catch (NumberFormatException e) {
+				intValue = 9999;
+				displayErrorMessage(con, "Invalid input. Please enter a number.");
+			}
+		} while (intValue > intMoney);
+		con.clear(); // Clear the console one last time
+						con.drawImage(val16, 0, 0); // Redraw the image
+						con.setTextColor(Color.WHITE);
+						con.drawString("$" + intValue, 700, 650);
+						con.repaint();
+						con.sleep(1000);
+		return true;
+	}
+
+	//displays the error message
+	private static void displayErrorMessage(Console con, String message) {
+		drawGameScreen(con);
+		con.setTextColor(Color.WHITE);
+		con.drawString(message, 550, 650);
+		con.repaint();
+		con.sleep(2000);
+		drawGameScreen(con);
+	}
+	
+	//saves the scores to the file
+	private static void saveScore(String user, double money) {
+		scoreBoardList.println(user);
+		scoreBoardList.println(money);
+	}
+
+	//displays the score board with the top 10 and the rank of the user who played recently
+	private static void showScoreboard(Console con) {
+		boolean bringScoreBoard = true;
+		while (bringScoreBoard) {
+			con.drawImage(imgFinalBoard, 0, 0);
+			con.repaint();
+			scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+			names = new ArrayList<>();
+			scores = new ArrayList<>();
+			readScoresFromFile();
+			sortScores();
+			displayScoresFinal(con);
+			searchUserAndPrintRank(con);
+			con.repaint();
+			con.sleep(16);
+		}
+	}
+
+    //display the final scores
     private static void displayScoresFinal(Console con) {
         for (int i = 0; i < Math.min(5, scores.size()); i++) {
 			con.setDrawColor(Color.WHITE);
@@ -981,8 +1134,9 @@ public class HasiniCPT {
         }
     }
 	
+	//method that searches and prints the rank of the user
 	private static void searchUserAndPrintRank(Console con) {
-		// First pass: count the number of users
+		// count the number of users
 		int userCount = 0;
 		scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
 		while (!scoreBoardListInput.eof()) {
@@ -995,7 +1149,7 @@ public class HasiniCPT {
 		// Create array with exact size
 		double[] allMoney = new double[userCount];
 
-		// Second pass: populate the array and find user's money
+		// populate the array and find user's money
 		double userMoney = -1;
 		int index = 0;
 		scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
@@ -1026,6 +1180,9 @@ public class HasiniCPT {
 		con.drawString(String.valueOf(rank), 500, 650);
 
 	}
+	
+	//method for when the play button is clicked
+	//stores the images in an array such that when "enter" is pressed on the keyboard each time, it goes through each image
 	private static void handleHelpButton(Console con) {
 		BufferedImage[] helpImages = {
 			imgHelp1, imgHelp2, imgHelp3, imgHelp5,
@@ -1084,7 +1241,7 @@ public class HasiniCPT {
 		}
 	}
 
-
+	//resets the game status
     private static void resetGameState() {
         cardIndex = 0;
         playerCards.clear();
