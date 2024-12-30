@@ -842,6 +842,7 @@ public class HasiniCPT {
 
     //if statement to determine the winner after the game is finished
     private static void determineWinner(Console con) {
+		//if player score is equal to the dealer score AND the player score is less than or equal to 21
         if (playerTotal == dealerTotal && playerTotal <= 21) {
             intMoney = intMoney;
             con.sleep(2000);
@@ -849,6 +850,7 @@ public class HasiniCPT {
             con.repaint();
             con.sleep(2000);
             con.drawImage(imgTie1, 0, 0);
+        //if player score is greater than 21 or dealer score is greater the player score
         } else if (playerTotal > 21 || (dealerTotal <= 21 && playerTotal < dealerTotal)) {
             con.sleep(2000);
             intMoney = intMoney - intValue;
@@ -856,6 +858,7 @@ public class HasiniCPT {
             con.repaint();
             con.sleep(2000);
             con.drawImage(imgLose, 0, 0);
+        //if player score is equal to 21 or dealer total is greater than 21 or player total is greater than dealer total
         } else if (playerTotal == 21 || dealerTotal > 21 || playerTotal > dealerTotal) {
             con.sleep(2000);
             intMoney = intMoney + intValue;
@@ -997,11 +1000,13 @@ public class HasiniCPT {
         con.clear();
         con.drawImage(imgValPlayAgain, 0, 0);
 
+		//displays another colour when the mouse pointer hovers over the button
         while (true) {
             int mouseX = con.currentMouseX();
             int mouseY = con.currentMouseY();
 
-            // Sure, let's play button
+            // "Sure, let's play" button
+            //This works if the button is pressed within the following coordinates
             if (mouseX >= 480 && mouseX <= 700 && mouseY >= 600 && mouseY <= 650) {
                 con.setDrawColor(Color.GREEN);
             } else {
@@ -1037,7 +1042,7 @@ public class HasiniCPT {
 
             con.sleep(16); // Add a small delay to prevent excessive CPU usage
         }
-    } else {
+    } else { //runs this section of the code when the user's money is 0.
         con.drawImage(noMoney1, 0, 0);
         con.repaint();
         con.sleep(2000);
