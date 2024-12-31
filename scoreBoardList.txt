@@ -34,3 +34,5 @@ ja
 0.0
 hasini
 1000.0
+vijayyyy
+920.0
