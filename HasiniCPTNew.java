@@ -12,37 +12,39 @@
 import arc.*;
 import java.util.Scanner;
 import java.awt.Color;
-import arc.Console;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HasiniCPTNew {
 	//Initializing global variables for the images, variables and lists
-	private static BufferedImage imgLoad;
-    private static final int BAR_WIDTH = 50;
-    private static final int BAR_HEIGHT = 20;
-    private static final int SCREEN_WIDTH = 1280;
-    private static final int SCREEN_HEIGHT = 720;
-    private static final int START_X = 525;
-    private static final int END_X = 710;
-	private static int cardIndex = 0;
+	
+    private static final int intBAR_WIDTH = 50;
+    private static final int intBAR_HEIGHT = 20;
+    private static final int intSCREEN_WIDTH = 1280;
+    private static final int intSCREEN_HEIGHT = 720;
+    private static final int intSTART_X = 525;
+    private static final int intEND_X = 710;
+    private static final int intCARD_WIDTH = 100;
+    private static final int intCARD_SPACING = 20;
+    private static final int intSPEED = 5;
 	private static double intMoney;
-    private static List<BufferedImage> playerCards = new ArrayList<>();
-    private static List<BufferedImage> dealerCards = new ArrayList<>();
-    private static List<String> playerCardValues = new ArrayList<>();
-    private static List<String> dealerCardValues = new ArrayList<>();
-    private static final int CARD_WIDTH = 100;
-    private static final int CARD_SPACING = 20;
-    private static final int SPEED = 5;
+    private static int intCardIndex = 0;
+    private static BufferedImage[][] playerCards = new BufferedImage[5][2];
+    private static BufferedImage[][] dealerCards = new BufferedImage[5][2];
+    private static String[][] playerCardValues = new String[5][2];
+    private static String[][] dealerCardValues = new String[5][2];
+    private static int intPlayerCardCount = 0;
+    private static int intDealerCardCount = 0;
+
 
     private static int playerTotal = 0;
     private static int dealerTotal = 0;
     private static boolean playerTurn = true;
     private static boolean gameEnded = false;
 
-    private static boolean canDoubleDown = false;
-    private static boolean playAgain = false;   
+    private static boolean blnCanDoubleDown = false;
+    private static boolean blnPlayAgain = false;   
     private static BufferedImage imgMoneyBoard; 
     private static double intValue;
     private static BufferedImage imgScoreBoard;
@@ -52,6 +54,7 @@ public class HasiniCPTNew {
     private static ArrayList<String> names;
     private static ArrayList<Double> scores;
     
+    private static BufferedImage imgLoad;
     private static BufferedImage imgBackButton;
     private static BufferedImage imgFinalBoard;
     private static BufferedImage imgMoneyWithBet;
@@ -70,23 +73,23 @@ public class HasiniCPTNew {
     private static BufferedImage imgHelp13;
     private static BufferedImage imgHelp14;
     private static BufferedImage imgHelp15;
-    private static BufferedImage noMoney1;
-    private static BufferedImage noMoney2;
-    private static BufferedImage main1;
-    private static BufferedImage main2;
-    private static BufferedImage play;
-    private static BufferedImage quit;
-    private static BufferedImage high;
-    private static BufferedImage moneyBonus;
-    private static BufferedImage miniStoryBoard;
-    private static BufferedImage val_pix;
-    private static BufferedImage nico_pix;
-    private static BufferedImage nico_pix_1;
-    private static BufferedImage val0;
-    private static BufferedImage val1;
-    private static BufferedImage val2;
-    private static BufferedImage val3;
-    private static BufferedImage val4;
+    private static BufferedImage imgNoMoney1;
+    private static BufferedImage imgNoMoney2;
+    private static BufferedImage imgMain1;
+    private static BufferedImage imgMain2;
+    private static BufferedImage imgPlay;
+    private static BufferedImage imgQuit;
+    private static BufferedImage imgHigh;
+    private static BufferedImage imgMoneyBonus;
+    private static BufferedImage imgMiniStoryBoard;
+    private static BufferedImage imgVal_pix;
+    private static BufferedImage imgNico_pix;
+    private static BufferedImage imgNico_pix_1;
+    private static BufferedImage imgVal0;
+    private static BufferedImage imgVal1;
+    private static BufferedImage imgVal2;
+    private static BufferedImage imgVal3;
+    private static BufferedImage imgVal4;
     private static BufferedImage val5;
     private static BufferedImage val6;
     private static BufferedImage nico7;
@@ -99,7 +102,7 @@ public class HasiniCPTNew {
     private static BufferedImage nico14;
     private static BufferedImage nico15;
     private static BufferedImage val16;
-    private static BufferedImage instructionboard;
+    private static BufferedImage imgInstructionboard;
     private static BufferedImage imgWinNico;
     private static BufferedImage imgWinVal;
     private static BufferedImage imgLose;
@@ -108,7 +111,7 @@ public class HasiniCPTNew {
     private static BufferedImage imgTie;
     private static BufferedImage imgTie1;
     private static BufferedImage imgValPlayAgain;
-    private static BufferedImage board;
+    private static BufferedImage imgBoard;
     private static BufferedImage imgMaybeNot;
     private static BufferedImage cardBack;
     
@@ -126,10 +129,10 @@ public class HasiniCPTNew {
 
         // Main animation loop.  Create flickering effect by using 2 images - main1 and main2
         while (intCountMainPage < 5) {
-            con.drawImage(main1, 0, 0);
+            con.drawImage(imgMain1, 0, 0);
             con.repaint();
             con.sleep(300);
-            con.drawImage(main2, 0, 0);
+            con.drawImage(imgMain2, 0, 0);
             con.repaint();
             con.sleep(300);
             intCountMainPage++;
@@ -137,17 +140,17 @@ public class HasiniCPTNew {
 
         // Play, High Score, Quit Button animation effect in main page 
         // (slide button from right for animation effect)
-        animateButton(con, main2, play, 200);
-        animateButton(con, main2, play, high, 370);
-        animateButton(con, main2, play, high, quit, 540);
+        animateButton(con, imgMain2, imgPlay, 200);
+        animateButton(con, imgMain2, imgPlay, imgHigh, 370);
+        animateButton(con, imgMain2, imgPlay, imgHigh, imgQuit, 540);
 
         // Main game loop
         boolean running = true;
         while (running) {
-            con.drawImage(main2, 0, 0);
-            con.drawImage(play, 500, 200);
-            con.drawImage(high, 500, 370);
-            con.drawImage(quit, 500, 540);
+            con.drawImage(imgMain2, 0, 0);
+            con.drawImage(imgPlay, 500, 200);
+            con.drawImage(imgHigh, 500, 370);
+            con.drawImage(imgQuit, 500, 540);
             con.drawImage(imgHelpButton, 1170, 610);
             con.repaint();
 			
@@ -225,11 +228,11 @@ public class HasiniCPTNew {
 					
 							// initializes the game 
 							// & play game in loop until user wants to continue
-							playAgain = true;
+							blnPlayAgain = true;
 							resetGameState ();
-							while (playAgain) {
-								playAgain = playGame(con);
-								if (playAgain) {
+							while (blnPlayAgain) {
+								blnPlayAgain = playGame(con);
+								if (blnPlayAgain) {
 									resetGameState();
 								}
 							}
@@ -306,11 +309,11 @@ public class HasiniCPTNew {
     
     private static void loadImages(Console con)
     {
-        main1 = con.loadImage("images/main1.png");
-        main2 = con.loadImage("images/main2.png");
+        imgMain1 = con.loadImage("images/main1.png");
+        imgMain2 = con.loadImage("images/main2.png");
         imgHelpButton = con.loadImage("images/helpButton.png");
-        play = con.loadImage("images/play.png");
-        quit = con.loadImage("images/quit.png");
+        imgPlay = con.loadImage("images/play.png");
+        imgQuit = con.loadImage("images/quit.png");
         imgTie = con.loadImage("images/imgTie.png");
         imgTie1 = con.loadImage("images/imgTie1.png");
         imgMaybeNot = con.loadImage("images/maybeNot.png");
@@ -328,16 +331,16 @@ public class HasiniCPTNew {
         imgHelp13 = con.loadImage("helpFromCreator/help13.png");
         imgHelp14 = con.loadImage("helpFromCreator/help14.png");
         imgHelp15 = con.loadImage("helpFromCreator/help15.png");
-        high = con.loadImage("images/high.png");
-        moneyBonus = con.loadImage("images/bonusmoney.png");
+        imgHigh = con.loadImage("images/high.png");
+        imgMoneyBonus = con.loadImage("images/bonusmoney.png");
         imgMoneyBoard = con.loadImage("images/moneyCount.png");
         imgScoreBoard = con.loadImage("images/scoreBoard.png");
         imgBackButton = con.loadImage("images/back_button.png");
         imgFinalBoard = con.loadImage("images/finalBoard.png");
         imgMoneyWithBet = con.loadImage("images/moneyWithBet.png");
-        noMoney1 = con.loadImage("images/noMoney1.png");
-        noMoney2 = con.loadImage("images/noMoney2.png");
-		board = con.loadImage("images/board.png");
+        imgNoMoney1 = con.loadImage("images/noMoney1.png");
+        imgNoMoney2 = con.loadImage("images/noMoney2.png");
+		imgBoard = con.loadImage("images/board.png");
 		cardBack = con.loadImage("images/cards/card_back.png");
 		imgWinVal = con.loadImage("images/val_win.png");
 		imgWinNico = con.loadImage("images/nico_win.png");
@@ -345,15 +348,15 @@ public class HasiniCPTNew {
 		imgWin = con.loadImage("images/win.png");
 		imgValPlayAgain = con.loadImage("images/page6.png");
 		
-		miniStoryBoard = con.loadImage("images/miniStoryBoard.png");
-		val_pix = con.loadImage("images/pix_val.png");
-		nico_pix = con.loadImage("images/pix_nico.png");
-		nico_pix_1 = con.loadImage("images/pix_nico_1.png");
-		val0 = con.loadImage("images/page0.png");
-		val1 = con.loadImage("images/page1.png");
-		val2 = con.loadImage("images/page2.png");
-		val3 = con.loadImage("images/page3.png");
-		val4 = con.loadImage("images/page4.png");
+		imgMiniStoryBoard = con.loadImage("images/miniStoryBoard.png");
+		imgVal_pix = con.loadImage("images/pix_val.png");
+		imgNico_pix = con.loadImage("images/pix_nico.png");
+		imgNico_pix_1 = con.loadImage("images/pix_nico_1.png");
+		imgVal0 = con.loadImage("images/page0.png");
+		imgVal1 = con.loadImage("images/page1.png");
+		imgVal2 = con.loadImage("images/page2.png");
+		imgVal3 = con.loadImage("images/page3.png");
+		imgVal4 = con.loadImage("images/page4.png");
 		val5 = con.loadImage("images/page5.png");
 		val6 = con.loadImage("images/page6.png");
 		nico7 = con.loadImage("images/page7.png");
@@ -366,7 +369,7 @@ public class HasiniCPTNew {
 		nico14 = con.loadImage("images/page14.png");
 		nico15 = con.loadImage("images/page15.png");
 		val16 = con.loadImage("images/page16.png");
-		instructionboard = con.loadImage("images/instructionsboard.png");
+		imgInstructionboard = con.loadImage("images/instructionsboard.png");
     }
     
 	public static void captureUserName(Console con) {
@@ -405,65 +408,65 @@ public class HasiniCPTNew {
 		con.clear();
 		
 		//pixel gameboard for starting the story
-		con.drawImage(instructionboard, 0, 0);
+		con.drawImage(imgInstructionboard, 0, 0);
 		
 		//initialize variables for the positions of the pixel characters - Val and Nico
-		int x = 200;
-		int y = 250;
+		int intX = 200;
+		int intY = 250;
 		
 		//setting the boundaries for the characters to move
-		int topBoundary = 150;
-		int bottomBoundary = 600 - val_pix.getHeight();
-		int leftBoundary = 0;
-		int rightBoundary = 600 - val_pix.getWidth();
+		int intTopBoundary = 150;
+		int intBottomBoundary = 600 - imgVal_pix.getHeight();
+		int intLeftBoundary = 0;
+		int intRightBoundary = 600 - imgVal_pix.getWidth();
 		
 		//drawing the characters - Nico and Val
-		con.drawImage(nico_pix, 580, 250);
-		con.drawImage(val_pix, x, y);
+		con.drawImage(imgNico_pix, 580, 250);
+		con.drawImage(imgVal_pix, intX, intY);
 		con.repaint();
 		con.sleep(5000);
 		
 		//does this loop while the x value of the val pizel character is not equal to the right boundary variable
-		while (x != rightBoundary) {
+		while (intX != intRightBoundary) {
 			con.clear();
-			con.drawImage(miniStoryBoard, 0, 0);
+			con.drawImage(imgMiniStoryBoard, 0, 0);
 			con.drawImage(imgMoneyBoard, 0, 0);
 			con.drawString("$" + String.valueOf(intMoney), 1080, 50);
-			con.drawImage(nico_pix, 580, 250);
-			con.drawImage(val_pix, x, y);
+			con.drawImage(imgNico_pix, 580, 250);
+			con.drawImage(imgVal_pix, intX, intY);
 			con.repaint();
 			
 			//key controls to move the character to meet nico
 			int key = con.getKey();
-			if (key == 38 && y > topBoundary) 
+			if (key == 38 && intY > intTopBoundary) 
 			{
-				y -= SPEED;
-			} else if (key == 40 && y < bottomBoundary) 
+				intY -= intSPEED;
+			} else if (key == 40 && intY < intBottomBoundary) 
 			{
-				y += SPEED;
-			}else if (key == 37 && x > leftBoundary) 
+				intY += intSPEED;
+			}else if (key == 37 && intX > intLeftBoundary) 
 			{
-				x -= SPEED;
-			}else if (key == 39 && x < rightBoundary) 
+				intX -= intSPEED;
+			}else if (key == 39 && intX < intRightBoundary) 
 			{
-				x += SPEED;
+				intX += intSPEED;
 			}
 
 			con.sleep(16);
 		}
 		
-		intLastXPosition = x;
-		intLastYPosition = y;
+		intLastXPosition = intX;
+		intLastYPosition = intY;
  
 		//Start of story board - interaction between Val and Nico
 		con.sleep(1000);
-		drawStoryBoardPage(con, val0);
+		drawStoryBoardPage(con, imgVal0);
 		con.sleep(2000);
-		drawStoryBoardPage(con, val1);
+		drawStoryBoardPage(con, imgVal1);
 		con.sleep(2000);
-		drawStoryBoardPage(con, val2);
+		drawStoryBoardPage(con, imgVal2);
 		con.sleep(2000);
-		drawStoryBoardPage(con, val3);
+		drawStoryBoardPage(con, imgVal3);
 		con.sleep(2000);
 		drawStoryBoardPage(con, nico7);
 		con.sleep(2000);
@@ -475,7 +478,7 @@ public class HasiniCPTNew {
 		con.sleep(2000);
 		drawStoryBoardPage(con, nico11);
 		con.sleep(2000);
-		drawStoryBoardPage(con, val4);
+		drawStoryBoardPage(con, imgVal4);
 		con.sleep(2000);
 		drawStoryBoardPage(con, val5);
 		con.sleep(2000);
@@ -491,55 +494,55 @@ public class HasiniCPTNew {
 	
 	private static void playBackStoryPart2(Console con) {
 		
-		int x = intLastXPosition;
-		int y = intLastYPosition;
+		int intX = intLastXPosition;
+		int intY = intLastYPosition;
 		con.setDrawColor(Color.WHITE);
 		//goes to the pixel game board and does an animation to move nico
-		drawStoryBoardPage(con, miniStoryBoard);
-		con.drawImage(val_pix, x, y);
-		con.drawImage(nico_pix_1, 580, 250);
+		drawStoryBoardPage(con, imgMiniStoryBoard);
+		con.drawImage(imgVal_pix, intX, intY);
+		con.drawImage(imgNico_pix_1, 580, 250);
 		con.repaint();
-		int nico_x = 580;
-		int nico_y = 250;
+		int intNico_x = 580;
+		int intNico_y = 250;
 		
 		//x-coordinates changes to move nico to the desired location
-		while (nico_x < 800) {
-			nico_x += SPEED; 
-			drawStoryBoardPage(con, miniStoryBoard);
-			con.drawImage(val_pix, x, 200);
-			con.drawImage(nico_pix_1, nico_x, 250);
+		while (intNico_x < 800) {
+			intNico_x += intSPEED; 
+			drawStoryBoardPage(con, imgMiniStoryBoard);
+			con.drawImage(imgVal_pix, intX, 200);
+			con.drawImage(imgNico_pix_1, intNico_x, 250);
 			con.repaint();
 			con.sleep(16); 
 		}
 		
 		//y-coordinates changes to move nico to the desired location
-		while(nico_y > 0){
-			nico_y -= SPEED;
-			drawStoryBoardPage(con, miniStoryBoard);
-			con.drawImage(val_pix, x, y);
-			con.drawImage(nico_pix_1, nico_x, nico_y);
+		while(intNico_y > 0){
+			intNico_y -= intSPEED;
+			drawStoryBoardPage(con, imgMiniStoryBoard);
+			con.drawImage(imgVal_pix, intX, intY);
+			con.drawImage(imgNico_pix_1, intNico_x, intNico_y);
 			con.repaint();
 			con.sleep(16);
 		}     
-		con.drawImage(nico_pix, nico_x, nico_y);
+		con.drawImage(imgNico_pix, intNico_x, intNico_y);
 		con.repaint(); 
 		
 		//x-coordinates changes to move valentina to the desired location
-		while (x < 900) {
-			x += SPEED; // Move the button to the middle animation
-			drawStoryBoardPage(con, miniStoryBoard);
-			con.drawImage(val_pix, x, y);
-			con.drawImage(nico_pix, nico_x, nico_y);
+		while (intX < 900) {
+			intX += intSPEED; // Move the button to the middle animation
+			drawStoryBoardPage(con, imgMiniStoryBoard);
+			con.drawImage(imgVal_pix, intX, intY);
+			con.drawImage(imgNico_pix, intNico_x, intNico_y);
 			con.repaint();
 			con.sleep(16); // Approximately 60 FPS
 		}
 			
 		//y-coordinates changes to move valentina to the desired location
-		while(y > 0){
-			y -= SPEED;
-			drawStoryBoardPage(con, miniStoryBoard);
-			con.drawImage(val_pix, x, y);
-			con.drawImage(nico_pix, nico_x, nico_y);
+		while(intY > 0){
+			intY -= intSPEED;
+			drawStoryBoardPage(con, imgMiniStoryBoard);
+			con.drawImage(imgVal_pix, intX, intY);
+			con.drawImage(imgNico_pix, intNico_x, intNico_y);
 			con.repaint();
 			con.sleep(16);
 		}     
@@ -551,7 +554,7 @@ public class HasiniCPTNew {
 			drawStoryBoardPage(con, val12);
 			con.sleep(2000);
 		}else{
-			drawStoryBoardPage(con, moneyBonus);
+			drawStoryBoardPage(con, imgMoneyBonus);
 			con.sleep(2000);
 		}
 		
@@ -650,7 +653,7 @@ public class HasiniCPTNew {
 		int nico_y = 0;
 
 		while (y < 250) {
-			y += SPEED;
+			y += intSPEED;
 			con.drawImage(miniStoryBoard, 0, 0);
 			con.drawImage(imgMoneyBoard, 0, 0);
 			con.drawString("$" + String.valueOf(intMoney), 1080, 50);
@@ -661,7 +664,7 @@ public class HasiniCPTNew {
 		} 
 
 		while (x > 0) {
-			x -= SPEED; // Changed += to -= to move left
+			x -= intSPEED; // Changed += to -= to move left
 			con.drawImage(miniStoryBoard, 0, 0);
 			con.drawImage(imgMoneyBoard, 0, 0);
 			con.drawString("$" + String.valueOf(intMoney), 1080, 50);
@@ -728,7 +731,7 @@ public class HasiniCPTNew {
      private static void loading(Console con){
 			imgLoad = con.loadImage("images/loading.png");
 
-			for (int i = START_X; i <= END_X; i += 2) {
+			for (int i = intSTART_X; i <= intEND_X; i += 2) {
 				// Clear the screen
 				con.clear();
 
@@ -737,11 +740,11 @@ public class HasiniCPTNew {
 
 				// Draw the loading bar
 				con.setDrawColor(Color.WHITE);
-				con.fillRect(i, 530, BAR_WIDTH, BAR_HEIGHT);
+				con.fillRect(i, 530, intBAR_WIDTH, intBAR_HEIGHT);
 
 				// Draw the border of the loading bar
 				con.setDrawColor(Color.BLACK);
-				con.drawRect(START_X, 530, END_X - START_X + BAR_WIDTH, BAR_HEIGHT);
+				con.drawRect(intSTART_X, 530, intEND_X - intSTART_X + intBAR_WIDTH, intBAR_HEIGHT);
 
 				// Update the display
 				con.repaint();
@@ -816,7 +819,7 @@ public class HasiniCPTNew {
                 } else if (isStandButtonClicked(con)) {
                     playerTurn = false;
                     dealerTurn(con, deck);
-                } else if (canDoubleDown && isDoubleDownButtonClicked(con)) {
+                } else if (blnCanDoubleDown && isDoubleDownButtonClicked(con)) {
                     doubleDown(con, deck);
                     playerTurn = false;
                     dealerTurn(con, deck);
@@ -870,36 +873,44 @@ public class HasiniCPTNew {
 	//deals the first 2 cards for the player and the dealer
     private static void dealInitialCards(Console con, String[][] deck) {
         for (int i = 0; i < 2; i++) {
-            playerCards.add(loadCardImage(con, deck[cardIndex][3]));
-            playerCardValues.add(deck[cardIndex][0]);
-            playerTotal = reCalculateTotal(playerCardValues); 
-            cardIndex++;
-
-            dealerCards.add(loadCardImage(con, deck[cardIndex][3]));
-            dealerCardValues.add(deck[cardIndex][0]);
-            dealerTotal = reCalculateTotal(dealerCardValues); 
-            cardIndex++;
+            addCardToPlayer(con, deck[intCardIndex]);
+            intCardIndex++;
+            addCardToDealer(con, deck[intCardIndex]);
+            intCardIndex++;
         }
-        canDoubleDown = (playerTotal == 9 || playerTotal == 10 || playerTotal == 11);
+        blnCanDoubleDown = (playerTotal == 9 || playerTotal == 10 || playerTotal == 11);
     }
+
+    private static void addCardToPlayer(Console con, String[] card) {
+        playerCards[intPlayerCardCount][0] = loadCardImage(con, card[3]);
+        playerCardValues[intPlayerCardCount][0] = card[0];
+        playerTotal += Integer.parseInt(card[2]);
+        intPlayerCardCount++;
+    }
+
+    private static void addCardToDealer(Console con, String[] card) {
+        dealerCards[intDealerCardCount][0] = loadCardImage(con, card[3]);
+        dealerCardValues[intDealerCardCount][0] = card[0];
+        dealerTotal += Integer.parseInt(card[2]);
+        intDealerCardCount++;
+    }
+
 
 	//when the user plays "hit"
     private static void hitCard(Console con, String[][] deck) {
-        BufferedImage newCard = loadCardImage(con, deck[cardIndex][3]);
-        playerCards.add(newCard);
-        playerCardValues.add(deck[cardIndex][0]);
-        playerTotal = reCalculateTotal(playerCardValues);
-        cardIndex++;
+        addCardToPlayer(con, deck[intCardIndex]);
+        intCardIndex++;
+        playerTotal = reCalculateTotal(playerCardValues, intPlayerCardCount);
         animateCardShuffle(con);
-        canDoubleDown = false;
+        blnCanDoubleDown = false;
     }
 
 	//recalculates the total for the special case which is the ace
-    private static int reCalculateTotal(List<String> cardValues) {
+    private static int reCalculateTotal(String[][] cardValues, int cardCount) {
         int total = 0;
         int aceCount = 0;
-        for (String cardValue : cardValues) {
-            int value = getCardValue(cardValue);
+        for (int i = 0; i < cardCount; i++) {
+            int value = getCardValue(cardValues[i][0]);
             if (value == 11) {
                 aceCount++;
             } else {
@@ -919,14 +930,12 @@ public class HasiniCPTNew {
     }
 
 	//method when it is time for the dealer's turn
-    private static void dealerTurn(Console con, String[][] deck) {
+     private static void dealerTurn(Console con, String[][] deck) {
         drawScene(con);
         while (dealerTotal < 17 || dealerTotal < playerTotal) {
-            BufferedImage newCard = loadCardImage(con, deck[cardIndex][3]);
-            dealerCards.add(newCard);
-            dealerCardValues.add(deck[cardIndex][0]);
-            dealerTotal = reCalculateTotal(dealerCardValues);
-            cardIndex++;
+            addCardToDealer(con, deck[intCardIndex]);
+            intCardIndex++;
+            dealerTotal = reCalculateTotal(dealerCardValues, intDealerCardCount);
             drawScene(con);
             con.sleep(1000);
         }
@@ -965,14 +974,14 @@ public class HasiniCPTNew {
 
 	//animates the card when the player presses hit to move the cards to the side
     private static void animateCardShuffle(Console con) {
-        int totalWidth = (playerCards.size() - 1) * (CARD_WIDTH + CARD_SPACING);
+        int totalWidth = (intPlayerCardCount - 1) * (intCARD_WIDTH + intCARD_SPACING);
         int startX = 640 - totalWidth / 2;
-        for (int step = 0; step < CARD_SPACING; step++) {
+        for (int step = 0; step < intCARD_SPACING; step++) {
             drawScene(con);
-            for (int i = 0; i < playerCards.size() - 1; i++) {
-                con.drawImage(playerCards.get(i), startX + i * (CARD_WIDTH + CARD_SPACING) - step, 450);
+            for (int i = 0; i < intPlayerCardCount - 1; i++) {
+                con.drawImage(playerCards[i][0], startX + i * (intCARD_WIDTH + intCARD_SPACING) - step, 450);
             }
-            con.drawImage(playerCards.get(playerCards.size() - 1), 1180, 450);
+            con.drawImage(playerCards[intPlayerCardCount - 1][0], 1180, 450);
             con.repaint();
             con.sleep(16);
         }
@@ -981,7 +990,7 @@ public class HasiniCPTNew {
 	
 	//draws the scene for the gameplay
     private static void drawScene(Console con) {
-        con.drawImage(board, 0, 0);
+        con.drawImage(imgBoard, 0, 0);
         con.drawImage(imgMoneyWithBet, 0, 0);
 		con.drawString("$" + String.valueOf(intMoney), 1080, 50);
 		con.drawString("$" + String.valueOf(intValue), 1100, 256);
@@ -990,7 +999,7 @@ public class HasiniCPTNew {
         if (playerTurn && playerTotal < 21) {
             drawHitButton(con);
             drawStandButton(con);
-            if (canDoubleDown) {
+            if (blnCanDoubleDown) {
                 drawDoubleDownButton(con);
             }
         }
@@ -999,24 +1008,22 @@ public class HasiniCPTNew {
     }
 
 	private static void displayPlayerCards(Console con) {
-		int totalWidth = (playerCards.size() - 1) * (CARD_WIDTH + CARD_SPACING);
-		// Adjust this value to move cards more to the left
-		int centerOffset = 100; // You can increase or decrease this value as needed
-		int startX = (640 - totalWidth / 2) - centerOffset;
-		for (int i = 0; i < playerCards.size(); i++) {
-			con.drawImage(playerCards.get(i), startX + i * (CARD_WIDTH + CARD_SPACING), 450);
-		}
+		int totalWidth = (intPlayerCardCount - 1) * (intCARD_WIDTH + intCARD_SPACING);
+        int startX = 640 - totalWidth / 2;
+        for (int i = 0; i < intPlayerCardCount; i++) {
+            con.drawImage(playerCards[i][0], startX + i * (intCARD_WIDTH + intCARD_SPACING), 450);
+        }
 	}
 
 
 	//display's the dealer's cards
     private static void displayDealerCards(Console con) {
-        con.drawImage(dealerCards.get(0), 500, 0);
+        con.drawImage(dealerCards[0][0], 500, 0);
         if (playerTurn) {
             con.drawImage(cardBack, 600, 0);
         } else {
-            for (int i = 1; i < dealerCards.size(); i++) {
-                con.drawImage(dealerCards.get(i), 500 + i * (CARD_WIDTH + CARD_SPACING), 0);
+            for (int i = 1; i < intDealerCardCount; i++) {
+                con.drawImage(dealerCards[i][0], 500 + i * (intCARD_WIDTH + intCARD_SPACING), 0);
             }
         }
     }
@@ -1133,10 +1140,10 @@ public class HasiniCPTNew {
 	            con.sleep(16); // Add a small delay to prevent excessive CPU usage
 	        }
 	    } else {
-	        con.drawImage(noMoney1, 0, 0);
+	        con.drawImage(imgNoMoney1, 0, 0);
 	        con.repaint();
 	        con.sleep(2000);
-	        con.drawImage(noMoney2, 0, 0);
+	        con.drawImage(imgNoMoney2, 0, 0);
 	        con.repaint();
 	        con.sleep(2000);
 	        System.out.println("Exiting");
@@ -1343,15 +1350,13 @@ public class HasiniCPTNew {
 
 	//resets the game status
     private static void resetGameState() {
-        cardIndex = 0;
-        playerCards.clear();
-        dealerCards.clear();
-        playerCardValues.clear();
-        dealerCardValues.clear();
+        intCardIndex = 0;
+        intPlayerCardCount = 0;
+        intDealerCardCount = 0;
         playerTotal = 0;
         dealerTotal = 0;
         playerTurn = true;
         gameEnded = false;
-        canDoubleDown = false;
+        blnCanDoubleDown = false;
     }
 }
