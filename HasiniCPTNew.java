@@ -12,9 +12,8 @@
 import arc.*;
 import java.util.Scanner;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.image.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HasiniCPTNew {
 	//Initializing global variables for the images, variables and lists
@@ -36,6 +35,7 @@ public class HasiniCPTNew {
     private static String[][] dealerCardValues = new String[5][2];
     private static int intPlayerCardCount = 0;
     private static int intDealerCardCount = 0;
+    private static int intCardCount = 2;
 
 
     private static int playerTotal = 0;
@@ -51,8 +51,6 @@ public class HasiniCPTNew {
     private static String strUser;
     private static TextOutputFile scoreBoardList;
     private static TextInputFile scoreBoardListInput;
-    private static ArrayList<String> names;
-    private static ArrayList<Double> scores;
     
     private static BufferedImage imgLoad;
     private static BufferedImage imgBackButton;
@@ -157,17 +155,6 @@ public class HasiniCPTNew {
             // If "Play" button is clicked
             if (isButtonClicked(con, 500, 200, 400, 150)) {
 				
-				int intCounter;
-				con.clear(); // Clear the console before starting
-				con.setDrawColor(new Color(0, 0, 0)); // Set custom RGB color (black)
-
-				// First animation: black rectangle sliding from left to right
-				for (intCounter = 0; intCounter < 1280; intCounter += 4) {
-					con.drawImage(normalUser, 0, 0);
-					con.fillRect(0, 0, intCounter, 720);
-					con.repaint();
-					con.sleep(1);
-				}
 				
 				loading(con);
 				con.sleep(1000);
@@ -213,10 +200,11 @@ public class HasiniCPTNew {
 					con.drawString("Maybe not", 810, 610);
 	
 					con.repaint();
-	
+					
 					// "Sure, let's play!" button clicked
 					//   -- show animation of Val and Nico moving to play blackjack
 					if (isButtonClicked(con, 490, 600, 200, 50)) {
+							loading(con);
 							buttonClicked = true;
 							playBackStoryPart2(con);
 							
@@ -241,6 +229,7 @@ public class HasiniCPTNew {
 					//when "maybe not" button is clicked
 					//exits the program after a small animation
 					} else if (isButtonClicked(con, 800, 600, 200, 50)) {
+						loading(con);
 						con.println("Goodbye");
 						con.drawImage(imgMaybeNot, 0, 0);
 						con.repaint();
@@ -257,17 +246,6 @@ public class HasiniCPTNew {
         
         // If High Score Button is clicked
         else if (isButtonClicked(con, 500, 370, 400, 150)) {
-			int intCounter;
-				con.clear(); // Clear the console before starting
-				con.setDrawColor(new Color(0, 0, 0)); // Set custom RGB color (black)
-
-				// First animation: black rectangle sliding from left to right
-				for (intCounter = 0; intCounter < 1280; intCounter += 4) {
-					con.drawImage(normalUser, 0, 0);
-					con.fillRect(0, 0, intCounter, 720);
-					con.repaint();
-					con.sleep(1);
-				}
 				
 				loading(con);
 				con.sleep(1000);
@@ -620,13 +598,60 @@ public class HasiniCPTNew {
 		con.drawImage(imgScoreBoard, 0, 0);
 		con.repaint();
 		scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
-		names = new ArrayList<>();
-		scores = new ArrayList<>();
-		readScoresFromFile();
-		sortScores();
+		readTopScoresFromFile(con);
 		displayScores(con);
 		con.drawImage(imgBackButton, 1080, 520);
 		con.repaint();
+	}
+
+	private static final int TOP_SCORES_COUNT = 10;
+	private static String[] topNames = new String[TOP_SCORES_COUNT];
+	private static double[] topScores = new double[TOP_SCORES_COUNT];
+
+	private static void readTopScoresFromFile(Console con) {
+		for (int i = 0; i < TOP_SCORES_COUNT; i++) {
+			topScores[i] = Double.MIN_VALUE;
+		}
+		
+		while (!scoreBoardListInput.eof()) {
+			String name = scoreBoardListInput.readLine();
+			double score = Double.parseDouble(scoreBoardListInput.readLine());
+			updateTopScores(name, score);
+		}
+		scoreBoardListInput.close();
+	}
+
+	private static void updateTopScores(String name, double score) {
+		int insertIndex = -1;
+		for (int i = 0; i < TOP_SCORES_COUNT; i++) {
+			if (score > topScores[i]) {
+				insertIndex = i;
+				break;
+			}
+		}
+		
+		if (insertIndex != -1) {
+			for (int i = TOP_SCORES_COUNT - 1; i > insertIndex; i--) {
+				topScores[i] = topScores[i - 1];
+				topNames[i] = topNames[i - 1];
+			}
+			topScores[insertIndex] = score;
+			topNames[insertIndex] = name;
+		}
+	}
+
+	private static void displayScores(Console con) {
+		for (int i = 0; i < TOP_SCORES_COUNT; i++) {
+			if (topScores[i] != Double.MIN_VALUE) {
+				con.setDrawColor(Color.WHITE);
+				if (i < 5) {
+					con.drawString(topNames[i] + ": " + topScores[i], 200, 180 + i * 90);
+				} else {
+					con.drawString(topNames[i] + ": " + topScores[i], 760, 180 + (i - 5) * 90);
+				}
+				con.repaint();
+			}
+		}
 	}
 
     
@@ -675,46 +700,7 @@ public class HasiniCPTNew {
 		}
 	}
 
-    //reads scores from scoreBoardList.txt
-	private static void readScoresFromFile() {
-        while (!scoreBoardListInput.eof()) {
-            names.add(scoreBoardListInput.readLine());
-            scores.add(Double.parseDouble(scoreBoardListInput.readLine()));
-        }
-        scoreBoardListInput.close();
-    }
-
-    //sorts scores using the bubble sort algorithm
-    private static void sortScores() {
-        for (int i = 0; i < scores.size() - 1; i++) {
-            for (int j = 0; j < scores.size() - i - 1; j++) {
-                if (scores.get(j) < scores.get(j + 1)) {
-                    // Swap scores
-                    double tempScore = scores.get(j);
-                    scores.set(j, scores.get(j + 1));
-                    scores.set(j + 1, tempScore);
-                    // Swap names
-                    String tempName = names.get(j);
-                    names.set(j, names.get(j + 1));
-                    names.set(j + 1, tempName);
-                }
-            }
-        }
-    }
-
-    //displays the scores on the high score banner page --> only ranks 1 - 10
-    private static void displayScores(Console con) {
-        for (int i = 0; i < Math.min(5, scores.size()); i++) {
-			con.setDrawColor(Color.WHITE);
-            con.drawString(names.get(i) + ": " + scores.get(i), 200, 180 + i * 90);
-            con.repaint();
-        }
-        for (int i = 5; i < Math.min(10, scores.size()); i++) {
-			con.setDrawColor(Color.WHITE);
-            con.drawString(names.get(i) + ": " + scores.get(i), 750, 180 + (i - 5) * 90);
-            con.repaint();
-        }
-    }
+    
     
     //animates the play button by changing x-coordinate values and repainting.
     private static void animateButton(Console con, BufferedImage background, BufferedImage button, int y) {
@@ -730,7 +716,17 @@ public class HasiniCPTNew {
     
      private static void loading(Console con){
 			imgLoad = con.loadImage("images/loading.png");
+			int intCounter;
+				con.clear(); // Clear the console before starting
+				con.setDrawColor(new Color(0, 0, 0)); // Set custom RGB color (black)
 
+				// First animation: black rectangle sliding from left to right
+				for (intCounter = 0; intCounter < 1280; intCounter += 4) {
+					con.fillRect(0, 0, intCounter, 720);
+					con.repaint();
+					con.sleep(1);
+				}
+				
 			for (int i = intSTART_X; i <= intEND_X; i += 2) {
 				// Clear the screen
 				con.clear();
@@ -752,6 +748,7 @@ public class HasiniCPTNew {
 				// Add a small delay to control the animation speed
 				con.sleep(16); // Approximately 60 FPS
         }
+        con.sleep(1000);
 	 }
     
     
@@ -903,6 +900,12 @@ public class HasiniCPTNew {
         playerTotal = reCalculateTotal(playerCardValues, intPlayerCardCount);
         animateCardShuffle(con);
         blnCanDoubleDown = false;
+        intCardCount += 1;
+        System.out.println(intCardCount);
+        if (intCardCount == 5 && playerTotal <= 21) {
+			drawScene(con);
+			determineWinner(con);
+		}
     }
 
 	//recalculates the total for the special case which is the ace
@@ -958,7 +961,7 @@ public class HasiniCPTNew {
             con.repaint();
             con.sleep(2000);
             con.drawImage(imgLose, 0, 0);
-        } else if (playerTotal == 21 || dealerTotal > 21 || playerTotal > dealerTotal) {
+        } else if (playerTotal == 21 || dealerTotal > 21 || playerTotal > dealerTotal || (playerTotal < 21 && intCardCount == 5)||(playerTotal == 21 && intCardCount == 5)) {
             con.sleep(2000);
             intMoney = intMoney + intValue;
             con.drawImage(imgWinVal, 0, 0);
@@ -966,6 +969,7 @@ public class HasiniCPTNew {
             con.sleep(2000);
             con.drawImage(imgWin, 0, 0);
         }
+        intCardCount = 2;
         con.repaint();
         con.sleep(2000);
         gameEnded = true;
@@ -996,7 +1000,7 @@ public class HasiniCPTNew {
 		con.drawString("$" + String.valueOf(intValue), 1100, 256);
         displayDealerCards(con);
         displayPlayerCards(con);
-        if (playerTurn && playerTotal < 21) {
+        if (playerTurn && playerTotal < 21 && intCardCount != 5) {
             drawHitButton(con);
             drawStandButton(con);
             if (blnCanDoubleDown) {
@@ -1092,7 +1096,125 @@ public class HasiniCPTNew {
             con.drawString("Dealer Total: " + dealerTotal, 10, 670);
         }
     }
+	
+	//displays the score board with the top 10 and the rank of the user who played recently
+	private static void showScoreBoard(Console con) {
+        boolean bringScoreBoard = true;
+        while (bringScoreBoard) {
+            con.drawImage(imgFinalBoard, 0, 0); // Changed imgFinalBoard to imgScoreBoard
+            con.repaint();
+            scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+            readScoresFromFileFinal(con);
+            sortScores(con);
+            displayScoresFinal(con);
+            searchUserAndPrintRank(con);
+            con.repaint();
+            con.sleep(16);
+        }
+    }
+	private static final int MAX_SCORES = 100;
+    private static String[] names = new String[MAX_SCORES];
+    private static double[] scores = new double[MAX_SCORES];
+    private static int scoreCount = 0;
 
+    private static void readScoresFromFileFinal(Console con) {
+        scoreCount = 0;
+        while (!scoreBoardListInput.eof() && scoreCount < MAX_SCORES) {
+            names[scoreCount] = scoreBoardListInput.readLine();
+            scores[scoreCount] = Double.parseDouble(scoreBoardListInput.readLine());
+            scoreCount++;
+        }
+        scoreBoardListInput.close();
+    }
+
+    private static void sortScores(Console con) {
+        for (int i = 0; i < scoreCount - 1; i++) {
+            for (int j = 0; j < scoreCount - i - 1; j++) {
+                if (scores[j] < scores[j + 1]) {
+                    // Swap scores
+                    double tempScore = scores[j];
+                    scores[j] = scores[j + 1];
+                    scores[j + 1] = tempScore;
+                    // Swap names
+                    String tempName = names[j];
+                    names[j] = names[j + 1];
+                    names[j + 1] = tempName;
+                }
+            }
+        }
+    }
+
+    private static void displayScoresFinal(Console con) {
+        for (int i = 0; i < Math.min(5, scoreCount); i++) {
+            con.setDrawColor(Color.WHITE);
+            con.drawString(names[i] + ": " + scores[i], 300, 180 + i * 80);
+            con.repaint();
+        }
+        for (int i = 5; i < Math.min(10, scoreCount); i++) {
+            con.setDrawColor(Color.WHITE);
+            con.drawString(names[i] + ": " + scores[i], 790, 180 + (i - 5) * 80);
+            con.repaint();
+        }
+    }
+
+    private static void searchUserAndPrintRank(Console con) {
+        // count the number of users
+        int userCount = 0;
+        scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+        while (!scoreBoardListInput.eof()) {
+            scoreBoardListInput.readLine(); // name
+            scoreBoardListInput.readLine(); // money
+            userCount++;
+        }
+        scoreBoardListInput.close();
+
+        // Create array with exact size
+        double[] allMoney = new double[userCount];
+
+        // populate the array and find user's money
+        double userMoney = -1;
+        int index = 0;
+        scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+        while (!scoreBoardListInput.eof()) {
+            String strName = scoreBoardListInput.readLine();
+            String strMoney = scoreBoardListInput.readLine();
+            allMoney[index] = Double.parseDouble(strMoney);
+            if (strName.equalsIgnoreCase(strUser)) {
+                userMoney = allMoney[index];
+            }
+            index++;
+        }
+        scoreBoardListInput.close();
+
+        // Sort the money array in descending order
+        bubbleSortDescending(allMoney);
+
+        // Find the user's rank
+        int rank = 1;
+        for (int i = 0; i < allMoney.length; i++) {
+            if (allMoney[i] == userMoney) {
+                break;
+            }
+            rank++;
+        }
+
+        // Print the rank
+        con.drawString(String.valueOf(rank), 500, 650);
+    }
+
+    private static void bubbleSortDescending(double[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (arr[j] < arr[j + 1]) {
+                    // Swap elements
+                    double temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
 	//method to ask the user to play again
     private static boolean askPlayAgain(Console con) {
 	    if (intMoney > 0) {
@@ -1133,7 +1255,7 @@ public class HasiniCPTNew {
 	                return getValidBet(con);
 	            } else if (isButtonClicked(con, 800, 600, 200, 50)) {
 	                saveScore(strUser, intMoney);
-	                showScoreboard(con);
+	                showScoreBoard(con);
 	                return false;
 	            }
 	
@@ -1168,11 +1290,11 @@ public class HasiniCPTNew {
 			con.setTextColor(Color.WHITE);
 			con.setDrawColor(Color.WHITE);
 			con.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-			con.print("						       ");
+			con.print("						         ");
 			String input = con.readLine();
 			try {
 				intValue = Integer.parseInt(input);
-				if (intValue > intMoney) {
+				if (intValue > intMoney || intValue < 0) {
 					con.setDrawColor(Color.WHITE);
 					displayErrorMessage(con, "Value must be less than or equal to " + intMoney + ".");
 				}
@@ -1209,84 +1331,7 @@ public class HasiniCPTNew {
 		scoreBoardList.println(money);
 	}
 
-	//displays the score board with the top 10 and the rank of the user who played recently
-	private static void showScoreboard(Console con) {
-		boolean bringScoreBoard = true;
-		while (bringScoreBoard) {
-			con.drawImage(imgFinalBoard, 0, 0);
-			con.repaint();
-			scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
-			names = new ArrayList<>();
-			scores = new ArrayList<>();
-			readScoresFromFile();
-			sortScores();
-			displayScoresFinal(con);
-			searchUserAndPrintRank(con);
-			con.repaint();
-			con.sleep(16);
-		}
-	}
-
-    //display the final scores
-    private static void displayScoresFinal(Console con) {
-        for (int i = 0; i < Math.min(5, scores.size()); i++) {
-			con.setDrawColor(Color.WHITE);
-            con.drawString(names.get(i) + ": " + scores.get(i), 300, 180 + i * 80);
-            con.repaint();
-        }
-        for (int i = 5; i < Math.min(10, scores.size()); i++) {
-			con.setDrawColor(Color.WHITE);
-            con.drawString(names.get(i) + ": " + scores.get(i), 790, 180 + (i - 5) * 80);
-            con.repaint();
-        }
-    }
 	
-	//method that searches and prints the rank of the user
-	private static void searchUserAndPrintRank(Console con) {
-		// count the number of users
-		int userCount = 0;
-		scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
-		while (!scoreBoardListInput.eof()) {
-			scoreBoardListInput.readLine(); // name
-			scoreBoardListInput.readLine(); // money
-			userCount++;
-		}
-		scoreBoardListInput.close();
-
-		// Create array with exact size
-		double[] allMoney = new double[userCount];
-
-		// populate the array and find user's money
-		double userMoney = -1;
-		int index = 0;
-		scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
-		while (!scoreBoardListInput.eof()) {
-			String strName = scoreBoardListInput.readLine();
-			String strMoney = scoreBoardListInput.readLine();
-			allMoney[index] = Double.parseDouble(strMoney);
-			if (strName.equalsIgnoreCase(strUser)) {
-				userMoney = allMoney[index];
-			}
-			index++;
-		}
-		scoreBoardListInput.close();
-
-		// Bubble sort the money array in descending order
-		bubbleSortDescending(allMoney);
-
-		// Find the user's rank
-		int rank = 1;
-		for (int i = 0; i < allMoney.length; i++) {
-			if (allMoney[i] == userMoney) {
-				break;
-			}
-			rank++;
-		}
-
-		// Print the rank
-		con.drawString(String.valueOf(rank), 500, 650);
-
-	}
 	
 	//method for when the play button is clicked
 	//stores the images in an array such that when "enter" is pressed on the keyboard each time, it goes through each image
@@ -1334,19 +1379,6 @@ public class HasiniCPTNew {
 	}
 
 
-	// Bubble sort method for descending order
-	private static void bubbleSortDescending(double[] arr) {
-		for (int i = 0; i < arr.length - 1; i++) {
-			for (int j = 0; j < arr.length - i - 1; j++) {
-				if (arr[j] < arr[j + 1]) {
-					// Swap elements
-					double temp = arr[j];
-					arr[j] = arr[j + 1];
-					arr[j + 1] = temp;
-				}
-			}
-		}
-	}
 
 	//resets the game status
     private static void resetGameState() {
