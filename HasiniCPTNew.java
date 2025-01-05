@@ -287,13 +287,14 @@ public class HasiniCPTNew {
 			}
 			// The code will continue to the main game loop after exiting the while loop
 		
-		//help button when clicked goes to the help screens
+		//When the hidden black joke button is clicked
 		}else if (isButtonClicked(con, 1240, 0, 40, 40)) {
             showGreenScreen = true;
             intYellowX = 0; // Reset yellow position when animation starts
             while(showGreenScreen){
 				runAnimation(con);
 			}
+		//help button when clicked goes to the help screens
         }else if(isButtonClicked(con, 1170, 610, 110, 110)){//help button code
 			handleHelpButton(con);
 			
@@ -308,6 +309,8 @@ public class HasiniCPTNew {
         con.sleep(16); 
         }  // main while blnRunning = true
     }
+    
+    //plays the among us animation
     private static void runAnimation(Console con) {
         con.drawImage(imgSpace, 0, 0);
         con.drawImage(imgYellow, intYellowX, 250);
@@ -325,6 +328,7 @@ public class HasiniCPTNew {
         }
     }
     
+    //plays the joke sequence
     private static void playEndSequence(Console con) {
         con.sleep(1000);
         con.drawImage(imgJokePage1, 0, 0);
