@@ -30,7 +30,7 @@ public class HasiniCPTNew {
 	private static String[] topNames = new String[intTOP_SCORES_COUNT];
 	private static double[] topScores = new double[intTOP_SCORES_COUNT];
     private static final int intSPEED = 5;
-	private static double intMoney;
+	private static double dblMoney;
     private static int intCardIndex = 0;
     private static BufferedImage[][] playerCards = new BufferedImage[5][2];
     private static BufferedImage[][] dealerCards = new BufferedImage[5][2];
@@ -53,7 +53,7 @@ public class HasiniCPTNew {
     private static boolean blnCanDoubleDown = false;
     private static boolean blnPlayAgain = false;   
     private static BufferedImage imgMoneyBoard; 
-    private static double intValue;
+    private static double dblValue;
     private static BufferedImage imgScoreBoard;
     private static String strUser;
     private static TextOutputFile scoreBoardList;
@@ -420,15 +420,15 @@ public class HasiniCPTNew {
 		imgNico15 = con.loadImage("images/page15.png");
 		imgVal16 = con.loadImage("images/page16.png");
 		imgInstructionboard = con.loadImage("images/instructionsboard.png");
-		imgYellow = con.loadImage("../yellow.png");
-        imgRed = con.loadImage("red.png");
-        imgYellowSlap = con.loadImage("yellowSlap.png");
-        imgDeadRed = con.loadImage("deadRed.png");
-        imgJokePage1 = con.loadImage("jokePage1.png");
-        imgJokePage2 = con.loadImage("jokePage2.png");
-        imgJokePage3 = con.loadImage("jokePage3.png");
-        imgJokePage4 = con.loadImage("jokePage4.png");
-        imgSpace = con.loadImage("space.png");
+		imgYellow = con.loadImage("images/yellow.png");
+        imgRed = con.loadImage("images/red.png");
+        imgYellowSlap = con.loadImage("images/yellowSlap.png");
+        imgDeadRed = con.loadImage("images/deadRed.png");
+        imgJokePage1 = con.loadImage("images/jokePage1.png");
+        imgJokePage2 = con.loadImage("images/jokePage2.png");
+        imgJokePage3 = con.loadImage("images/jokePage3.png");
+        imgJokePage4 = con.loadImage("images/jokePage4.png");
+        imgSpace = con.loadImage("images/space.png");
     }
     
 	public static void captureUserName(Console con) {
@@ -449,12 +449,12 @@ public class HasiniCPTNew {
 			 con.clear();
 			 con.drawImage(statitan, 0, 0);
 			 con.repaint();
-			 intMoney = 2000;
+			 dblMoney = 2000;
 			 con.sleep(2000);
 					
 		}else{
 			con.drawImage(imgNormalUser, 0, 0);
-			intMoney = 1000;
+			dblMoney = 1000;
 			con.sleep(2000);
 		}
 		
@@ -490,7 +490,7 @@ public class HasiniCPTNew {
 			con.clear();
 			con.drawImage(imgMiniStoryBoard, 0, 0);
 			con.drawImage(imgMoneyBoard, 0, 0);
-			con.drawString("$" + String.valueOf(intMoney), 1080, 50);
+			con.drawString("$" + String.valueOf(dblMoney), 1080, 50);
 			con.drawImage(imgNico_pix, 580, 250);
 			con.drawImage(imgVal_pix, intX, intY);
 			con.repaint();
@@ -609,7 +609,7 @@ public class HasiniCPTNew {
 		// if statement to change the storyboard backdrop image according 
 		// to whether the user has $1000 or $2000
 		con.sleep(1000);
-		if(intMoney == 1000){
+		if(dblMoney == 1000){
 			drawStoryBoardPage(con, imgVal12);
 			con.sleep(2000);
 		}else{
@@ -644,31 +644,31 @@ public class HasiniCPTNew {
 			// 1. Bet Amount <= Wallet Amount
 			// 2. Bet Amount should be integer
 			try {
-				intValue = Integer.parseInt(input);
+				dblValue = Integer.parseInt(input);
 			
-				if (intValue > intMoney) {
+				if (dblValue > dblMoney) {
 					// Print user message that value must be lesser for few seconds
 					con.setTextColor(Color.WHITE);
-					con.drawString("Value must be less than or equal to " + intMoney + ". Try again.", 550, 650);
+					con.drawString("Value must be less than or equal to " + dblMoney + ". Try again.", 550, 650);
 					con.repaint();
 					con.sleep(2000);
 					con.clear();
 				}
 			} catch (NumberFormatException e) {
 				// If entered amount is not valid, then print user mesage accordingy.
-				intValue = 9999;
+				dblValue = 9999;
 				con.setTextColor(Color.WHITE);
 				con.drawString("Invalid input. Please enter a number.", 550, 650);
 				con.repaint();
 				con.sleep(2000);
 				con.clear();
 			}
-		} while (intValue > intMoney);
+		} while (dblValue > dblMoney);
 		
 		con.clear(); // Clear the console one last time
 		con.drawImage(imgVal16, 0, 0); // Redraw the image
 		con.setTextColor(Color.WHITE);
-		con.drawString("$" + intValue, 700, 650);  //Display bet amount
+		con.drawString("$" + dblValue, 700, 650);  //Display bet amount
 		con.repaint();
 		con.sleep(1000);
 	}
@@ -740,7 +740,7 @@ public class HasiniCPTNew {
     private static void drawStoryBoardPage(Console con, BufferedImage imgImage) {
 		con.drawImage(imgImage, 0, 0);
 		con.drawImage(imgMoneyBoard, 0, 0);
-		con.drawString("$" + String.valueOf(intMoney), 1080, 50);
+		con.drawString("$" + String.valueOf(dblMoney), 1080, 50);
 		con.repaint();
     }
     
@@ -759,7 +759,7 @@ public class HasiniCPTNew {
 			y += intSPEED;
 			con.drawImage(miniStoryBoard, 0, 0);
 			con.drawImage(imgMoneyBoard, 0, 0);
-			con.drawString("$" + String.valueOf(intMoney), 1080, 50);
+			con.drawString("$" + String.valueOf(dblMoney), 1080, 50);
 			con.drawImage(val_pix, x, y);
 			con.drawImage(nico_pix, nico_x, nico_y);
 			con.repaint();
@@ -770,7 +770,7 @@ public class HasiniCPTNew {
 			x -= intSPEED; // Changed += to -= to move left
 			con.drawImage(miniStoryBoard, 0, 0);
 			con.drawImage(imgMoneyBoard, 0, 0);
-			con.drawString("$" + String.valueOf(intMoney), 1080, 50);
+			con.drawString("$" + String.valueOf(dblMoney), 1080, 50);
 			con.drawImage(val_pix, x, y);
 			con.drawImage(nico_pix, nico_x, nico_y);
 			con.repaint();
@@ -1026,7 +1026,7 @@ public class HasiniCPTNew {
     //if statement to determine the winner after the game is finished
     private static void determineWinner(Console con) {
         if (intPlayerTotal == intDealerTotal && intPlayerTotal <= 21) {
-            intMoney = intMoney;
+            dblMoney = dblMoney;
             con.sleep(2000);
             con.drawImage(imgTie, 0, 0);
             con.repaint();
@@ -1034,7 +1034,7 @@ public class HasiniCPTNew {
             con.drawImage(imgTie1, 0, 0);
         } else if (intPlayerTotal > 21 || (intDealerTotal <= 21 && intPlayerTotal < intDealerTotal)) {
             con.sleep(2000);
-            intMoney = intMoney - intValue;
+            dblMoney = dblMoney - dblValue;
             con.drawImage(imgWinNico, 0, 0);
             con.repaint();
             con.sleep(2000);
@@ -1042,9 +1042,9 @@ public class HasiniCPTNew {
         } else if (intPlayerTotal == 21 || intDealerTotal > 21 || intPlayerTotal > intDealerTotal || (intPlayerTotal < 21 && intCardCount == 5)||(intPlayerTotal == 21 && intCardCount == 5)) {
             con.sleep(2000);
             if (intPlayerTotal == 21){
-				intMoney = intMoney + (2*intValue);
+				dblMoney = dblMoney + (2*dblValue);
 			}else{
-				intMoney = intMoney + intValue;
+				dblMoney = dblMoney + dblValue;
 			}
             
             con.drawImage(imgWinVal, 0, 0);
@@ -1079,8 +1079,8 @@ public class HasiniCPTNew {
     private static void drawScene(Console con) {
         con.drawImage(imgBoard, 0, 0);
         con.drawImage(imgMoneyWithBet, 0, 0);
-		con.drawString("$" + String.valueOf(intMoney), 1080, 50);
-		con.drawString("$" + String.valueOf(intValue), 1100, 256);
+		con.drawString("$" + String.valueOf(dblMoney), 1080, 50);
+		con.drawString("$" + String.valueOf(dblValue), 1100, 256);
         displayDealerCards(con);
         displayPlayerCards(con);
         if (blnPlayerTurn && intPlayerTotal < 21 && intCardCount != 5) {
@@ -1164,7 +1164,7 @@ public class HasiniCPTNew {
 
 	//method for when double down is clicked
     private static void doubleDown(Console con, String[][] deck) {
-		intValue = intValue*2;
+		dblValue = dblValue*2;
         hitCard(con, deck);
         if (intPlayerTotal > 21) {
             determineWinner(con);
@@ -1297,7 +1297,7 @@ public class HasiniCPTNew {
     }
 	//method to ask the user to play again
     private static boolean askPlayAgain(Console con) {
-	    if (intMoney > 0) {
+	    if (dblMoney > 0) {
 	        con.clear();
 	        con.drawImage(imgValPlayAgain, 0, 0);
 	
@@ -1334,7 +1334,7 @@ public class HasiniCPTNew {
 	                drawGameScreen(con);
 	                return getValidBet(con);
 	            } else if (isButtonClicked(con, 800, 600, 200, 50)) {
-	                saveScore(strUser, intMoney);
+	                saveScore(strUser, dblMoney);
 	                showScoreBoard(con);
 	                return false;
 	            }
@@ -1359,7 +1359,7 @@ public class HasiniCPTNew {
 	private static void drawGameScreen(Console con) {
 		con.drawImage(imgVal16, 0, 0);
 		con.drawImage(imgMoneyBoard, 0, 0);
-		con.drawString("$" + intMoney, 1080, 50);
+		con.drawString("$" + dblMoney, 1080, 50);
 		con.setTextColor(Color.WHITE);
 		con.repaint();
 	}
@@ -1373,22 +1373,22 @@ public class HasiniCPTNew {
 			con.print("						         ");
 			String input = con.readLine();
 			try {
-				intValue = Integer.parseInt(input);
-				if (intValue > intMoney || intValue < 0) {
+				dblValue = Integer.parseInt(input);
+				if (dblValue > dblMoney || dblValue < 0) {
 					con.setDrawColor(Color.WHITE);
-					displayErrorMessage(con, "Value must be less than or equal to " + intMoney + ".");
+					displayErrorMessage(con, "Value must be less than or equal to " + dblMoney + ".");
 				}
 			} catch (NumberFormatException e) {
-				intValue = 9999;
+				dblValue = 9999;
 				con.setDrawColor(Color.WHITE);
 				displayErrorMessage(con, "Invalid input. Please enter a number.");
 			}
-		} while (intValue > intMoney);
+		} while (dblValue > dblMoney);
 		
 		con.clear(); // Clear the console one last time
 		con.drawImage(imgVal16, 0, 0); // Redraw the image
 		con.setTextColor(Color.WHITE);
-		con.drawString("$" + intValue, 700, 650);
+		con.drawString("$" + dblValue, 700, 650);
 		con.repaint();
 		con.sleep(1000);
 		return true;
