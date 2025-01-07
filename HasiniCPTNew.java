@@ -39,9 +39,10 @@ public class HasiniCPTNew {
     private static int intPlayerCardCount = 0;
     private static int intDealerCardCount = 0;
     private static int intCardCount = 2;
-    private static final int MAX_SCORES = 100;
-    private static String[] names = new String[MAX_SCORES];
-    private static double[] scores = new double[MAX_SCORES];
+    private static int intDealerCardCountForArray = 2;
+    private static int intMAX_SCORES = 100;
+    private static String[] names = new String[intMAX_SCORES];
+    private static double[] scores = new double[intMAX_SCORES];
     private static int intScoreCount = 0;
 
 
@@ -318,6 +319,8 @@ public class HasiniCPTNew {
         
         // Move yellow.png to the right
         intYellowX += 5; 
+        con.repaint();
+        con.sleep(16);
         
         // Check if yellow has reached red
         if (intYellowX >= 550) {
@@ -431,34 +434,40 @@ public class HasiniCPTNew {
         imgSpace = con.loadImage("images/space.png");
     }
     
+    //method for the user to get the user's username
 	public static void captureUserName(Console con) {
-		BufferedImage statitan = con.loadImage("images/statitan.png");
-		imgNormalUser = con.loadImage("images/normal_user.png"); 
-						
-		//User enter's their username.  
-		//Keep text color as White.  Position the user entry in control using println of '\n' (new line) and ' ' (space)
-		con.drawImage(imgNormalUser, 0, 0); // Redraw the image
-		con.repaint();
-		con.setTextColor(Color.WHITE);
-		con.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-	    con.print("						");
-		strUser = con.readLine();
-		
-		//Cheatcode - statitan gets $2000.  Other users gets only $1000
-		if(strUser.equalsIgnoreCase("statitan")) {
-			 con.clear();
-			 con.drawImage(statitan, 0, 0);
-			 con.repaint();
-			 dblMoney = 2000;
-			 con.sleep(2000);
-					
-		}else{
-			con.drawImage(imgNormalUser, 0, 0);
-			dblMoney = 1000;
-			con.sleep(2000);
-		}
-		
-	}
+        BufferedImage statitan = con.loadImage("images/statitan.png");
+        imgNormalUser = con.loadImage("images/normal_user.png");
+
+        // Load the custom font
+        Font fntFont = con.loadFont("font.ttf", 50);
+        con.setTextFont(fntFont); // Set the custom font
+
+        // User enters their username
+        con.drawImage(imgNormalUser, 0, 0); // Redraw the image
+        con.repaint();
+        con.setTextColor(Color.WHITE);
+        
+        // Positioning the user entry with new lines and spaces
+        // Adjust spacing as needed
+        con.println("\n\n\n\n\n\n\n");
+        con.print("                                            ");  
+        
+        strUser = con.readLine(); // Read user input
+
+        // Cheatcode - statitan gets $2000. Other users get only $1000
+        if (strUser.equalsIgnoreCase("statitan")) {
+            con.clear();
+            con.drawImage(statitan, 0, 0);
+            con.repaint();
+            dblMoney = 2000;
+            con.sleep(2000);
+        } else {
+            con.drawImage(imgNormalUser, 0, 0);
+            dblMoney = 1000;
+            con.sleep(2000);
+        }
+    }
 	
 	// Play back story Part 1
 	//  -- Animation to introduce Nico and Val characters & story backdrop
@@ -636,8 +645,8 @@ public class HasiniCPTNew {
 		do {
 			drawStoryBoardPage(con, imgVal16);
 			con.setTextColor(Color.WHITE);
-			con.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-            con.print("						       ");
+			con.println("\n\n\n\n\n\n\n\n\n\n\n");
+            con.print("	                      ");
 			String input = con.readLine();
 			drawStoryBoardPage(con, imgVal16);
 			// Handle error conditions on the bet amount.
@@ -685,7 +694,7 @@ public class HasiniCPTNew {
 		con.repaint();
 	}
 
-
+	//method to read top scores from file
 	private static void readTopScoresFromFile(Console con) {
 		for (int i = 0; i < intTOP_SCORES_COUNT; i++) {
 			topScores[i] = Double.MIN_VALUE;
@@ -699,6 +708,7 @@ public class HasiniCPTNew {
 		scoreBoardListInput.close();
 	}
 
+	//method to epdate the top scores
 	private static void updateTopScores(String name, double score) {
 		int insertIndex = -1;
 		for (int i = 0; i < intTOP_SCORES_COUNT; i++) {
@@ -718,14 +728,17 @@ public class HasiniCPTNew {
 		}
 	}
 
+	//display total scores on the screen
 	private static void displayScores(Console con) {
+		Font font2 = new Font("Courier New", Font.BOLD, 20);
+		con.setDrawFont(font2);
 		for (int i = 0; i < intTOP_SCORES_COUNT; i++) {
 			if (topScores[i] != Double.MIN_VALUE) {
 				con.setDrawColor(Color.WHITE);
 				if (i < 5) {
 					con.drawString(topNames[i] + ": " + topScores[i], 200, 180 + i * 90);
 				} else {
-					con.drawString(topNames[i] + ": " + topScores[i], 760, 180 + (i - 5) * 90);
+					con.drawString(topNames[i] + ": " + topScores[i], 770, 180 + (i - 5) * 90);
 				}
 				con.repaint();
 			}
@@ -792,6 +805,7 @@ public class HasiniCPTNew {
         }
     }
     
+    //loading animation
      private static void loading(Console con){
 			imgLoad = con.loadImage("images/loading.png");
 			int intCounter;
@@ -956,13 +970,16 @@ public class HasiniCPTNew {
         blnCanDoubleDown = (intPlayerTotal == 9 || intPlayerTotal == 10 || intPlayerTotal == 11);
     }
 
+	//add a card to the player when this method is run
     private static void addCardToPlayer(Console con, String[] card) {
         playerCards[intPlayerCardCount][0] = loadCardImage(con, card[3]);
         playerCardValues[intPlayerCardCount][0] = card[0];
         intPlayerTotal += Integer.parseInt(card[2]);
         intPlayerCardCount++;
     }
-
+	
+	
+	//adds a card to the dealer when this method is run
     private static void addCardToDealer(Console con, String[] card) {
         dealerCards[intDealerCardCount][0] = loadCardImage(con, card[3]);
         dealerCardValues[intDealerCardCount][0] = card[0];
@@ -1011,14 +1028,23 @@ public class HasiniCPTNew {
     }
 
 	//method when it is time for the dealer's turn
+	//has to be checked still
      private static void dealerTurn(Console con, String[][] deck) {
         drawScene(con);
         while (intDealerTotal < 17 || intDealerTotal < intPlayerTotal) {
+			if (intDealerCardCountForArray == 5 && intDealerTotal <= 21){
+				determineWinner(con);
+				System.out.println("Nico wins");
+				break;
+				
+			}
             addCardToDealer(con, deck[intCardIndex]);
             intCardIndex++;
             intDealerTotal = reCalculateTotal(dealerCardValues, intDealerCardCount);
             drawScene(con);
             con.sleep(1000);
+            intDealerCardCountForArray ++;
+            System.out.println(intDealerCardCountForArray);
         }
         determineWinner(con);
     }
@@ -1032,7 +1058,7 @@ public class HasiniCPTNew {
             con.repaint();
             con.sleep(2000);
             con.drawImage(imgTie1, 0, 0);
-        } else if (intPlayerTotal > 21 || (intDealerTotal <= 21 && intPlayerTotal < intDealerTotal)) {
+        } else if (intPlayerTotal > 21 || (intDealerTotal <= 21 && intPlayerTotal < intDealerTotal)||intDealerCardCountForArray == 5) {
             con.sleep(2000);
             dblMoney = dblMoney - dblValue;
             con.drawImage(imgWinNico, 0, 0);
@@ -1053,6 +1079,7 @@ public class HasiniCPTNew {
             con.drawImage(imgWin, 0, 0);
         }
         intCardCount = 2;
+        intDealerCardCountForArray = 2;
         con.repaint();
         con.sleep(2000);
         blnGameEnded = true;
@@ -1094,6 +1121,7 @@ public class HasiniCPTNew {
         con.repaint();
     }
 
+	//display's the player's cards on the screen
 	private static void displayPlayerCards(Console con) {
 		int totalWidth = (intPlayerCardCount - 1) * (intCARD_WIDTH + intCARD_SPACING);
         int startX = 640 - totalWidth / 2;
@@ -1196,10 +1224,11 @@ public class HasiniCPTNew {
         }
     }
 	
-
+	
+	//read scores from file
     private static void readScoresFromFileFinal(Console con) {
         intScoreCount = 0;
-        while (!scoreBoardListInput.eof() && intScoreCount < MAX_SCORES) {
+        while (!scoreBoardListInput.eof() && intScoreCount < intMAX_SCORES) {
             names[intScoreCount] = scoreBoardListInput.readLine();
             scores[intScoreCount] = Double.parseDouble(scoreBoardListInput.readLine());
             intScoreCount++;
@@ -1207,6 +1236,7 @@ public class HasiniCPTNew {
         scoreBoardListInput.close();
     }
 
+	//sorts the scores using bubble sort
     private static void sortScores(Console con) {
         for (int i = 0; i < intScoreCount - 1; i++) {
             for (int j = 0; j < intScoreCount - i - 1; j++) {
@@ -1369,8 +1399,8 @@ public class HasiniCPTNew {
 		do {
 			con.setTextColor(Color.WHITE);
 			con.setDrawColor(Color.WHITE);
-			con.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-			con.print("						         ");
+			con.println("\n\n\n\n\n\n\n\n\n\n\n");
+            con.print("	                      ");
 			String input = con.readLine();
 			try {
 				dblValue = Integer.parseInt(input);
