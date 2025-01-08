@@ -120,6 +120,7 @@ public class HasiniCPTNew {
     private static BufferedImage imgBoard;
     private static BufferedImage imgMaybeNot;
     private static BufferedImage imgCardBack;
+    private static BufferedImage imgBlackjack;
     
     private static int intLastXPosition;
     private static int intLastYPosition;
@@ -400,6 +401,7 @@ public class HasiniCPTNew {
 		imgLose = con.loadImage("images/lose.png");
 		imgWin = con.loadImage("images/win.png");
 		imgValPlayAgain = con.loadImage("images/page6.png");
+		imgBlackjack = con.loadImage("images/blackjack.png");
 		
 		imgMiniStoryBoard = con.loadImage("images/miniStoryBoard.png");
 		imgVal_pix = con.loadImage("images/pix_val.png");
@@ -646,7 +648,7 @@ public class HasiniCPTNew {
 			drawStoryBoardPage(con, imgVal16);
 			con.setTextColor(Color.WHITE);
 			con.println("\n\n\n\n\n\n\n\n\n\n\n");
-            con.print("	                      ");
+            con.print("	                                     ");
 			String input = con.readLine();
 			drawStoryBoardPage(con, imgVal16);
 			// Handle error conditions on the bet amount.
@@ -1058,24 +1060,28 @@ public class HasiniCPTNew {
             con.repaint();
             con.sleep(2000);
             con.drawImage(imgTie1, 0, 0);
-        } else if (intPlayerTotal > 21 || (intDealerTotal <= 21 && intPlayerTotal < intDealerTotal)||intDealerCardCountForArray == 5) {
+        } else if (intPlayerTotal > 21 || (intDealerTotal <= 21 && intPlayerTotal < intDealerTotal && intCardCount != 5)||intDealerCardCountForArray == 5) {
             con.sleep(2000);
             dblMoney = dblMoney - dblValue;
             con.drawImage(imgWinNico, 0, 0);
             con.repaint();
             con.sleep(2000);
             con.drawImage(imgLose, 0, 0);
+            //issue here is that when there is a blackjack and 5 cards, it does it twice still figuring out why--
         } else if (intPlayerTotal == 21 || intDealerTotal > 21 || intPlayerTotal > intDealerTotal || (intPlayerTotal < 21 && intCardCount == 5)||(intPlayerTotal == 21 && intCardCount == 5)) {
             con.sleep(2000);
-            if (intPlayerTotal == 21){
+            if (intPlayerTotal == 21 && intCardCount == 2){
 				dblMoney = dblMoney + (2*dblValue);
+				con.drawImage(imgBlackjack, 0, 0);
+				con.repaint();
+				con.sleep(2000);
 			}else{
-				dblMoney = dblMoney + dblValue;
+				dblMoney = dblMoney + dblValue;         
+				con.drawImage(imgWinVal, 0, 0);
+				con.repaint();
+				con.sleep(2000);
 			}
-            
-            con.drawImage(imgWinVal, 0, 0);
-            con.repaint();
-            con.sleep(2000);
+
             con.drawImage(imgWin, 0, 0);
         }
         intCardCount = 2;
@@ -1400,7 +1406,7 @@ public class HasiniCPTNew {
 			con.setTextColor(Color.WHITE);
 			con.setDrawColor(Color.WHITE);
 			con.println("\n\n\n\n\n\n\n\n\n\n\n");
-            con.print("	                      ");
+            con.print("	                                     ");
 			String input = con.readLine();
 			try {
 				dblValue = Integer.parseInt(input);
