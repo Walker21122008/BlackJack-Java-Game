@@ -38,7 +38,6 @@ public class HasiniCPTNew {
     private static String[][] dealerCardValues = new String[5][2];
     private static int intPlayerCardCount = 0;
     private static int intDealerCardCount = 0;
-    private static int intCardCount = 2;
     private static int intDealerCardCountForArray = 2;
     private static int intMAX_SCORES = 100;
     private static String[] names = new String[intMAX_SCORES];
@@ -121,6 +120,7 @@ public class HasiniCPTNew {
     private static BufferedImage imgMaybeNot;
     private static BufferedImage imgCardBack;
     private static BufferedImage imgBlackjack;
+    private static BufferedImage imgCharlie;
     
     private static int intLastXPosition;
     private static int intLastYPosition;
@@ -434,6 +434,7 @@ public class HasiniCPTNew {
         imgJokePage3 = con.loadImage("images/jokePage3.png");
         imgJokePage4 = con.loadImage("images/jokePage4.png");
         imgSpace = con.loadImage("images/space.png");
+        imgCharlie = con.loadImage("images/charlie.png");
     }
     
     //method for the user to get the user's username
@@ -893,7 +894,7 @@ public class HasiniCPTNew {
         dealInitialCards(con, deck);
         drawScene(con);
         
-        //if the player total is already 21, it goes to the determine winner method
+        //if the player total is already 21, it's blackjack.  It goes to the determine winner method
         if (intPlayerTotal == 21) {
             determineWinner(con);
         }
@@ -903,10 +904,14 @@ public class HasiniCPTNew {
             if (blnPlayerTurn) {
                 if (isHitButtonClicked(con) && intPlayerTotal < 21) {
                     hitCard(con, deck);
-                    if (intPlayerTotal >= 21) {
+                    //If playerTotal > 21 (busted) or player got 5 cards (Charlie rule) - then determine winner
+                    if (intPlayerTotal > 21 || intPlayerCardCount == 5) {
                         blnPlayerTurn = false;
                         determineWinner(con);
-                    }
+                    }else if(intPlayerTotal == 21){
+						blnPlayerTurn = false;
+						dealerTurn(con, deck);
+					}
                 } else if (isStandButtonClicked(con)) {
                     blnPlayerTurn = false;
                     dealerTurn(con, deck);
@@ -976,8 +981,8 @@ public class HasiniCPTNew {
     private static void addCardToPlayer(Console con, String[] card) {
         playerCards[intPlayerCardCount][0] = loadCardImage(con, card[3]);
         playerCardValues[intPlayerCardCount][0] = card[0];
-        intPlayerTotal += Integer.parseInt(card[2]);
         intPlayerCardCount++;
+        intPlayerTotal = reCalculateTotal(playerCardValues, intPlayerCardCount);
     }
 	
 	
@@ -985,8 +990,8 @@ public class HasiniCPTNew {
     private static void addCardToDealer(Console con, String[] card) {
         dealerCards[intDealerCardCount][0] = loadCardImage(con, card[3]);
         dealerCardValues[intDealerCardCount][0] = card[0];
-        intDealerTotal += Integer.parseInt(card[2]);
         intDealerCardCount++;
+        intDealerTotal = reCalculateTotal(dealerCardValues, intDealerCardCount);
     }
 
 
@@ -994,15 +999,10 @@ public class HasiniCPTNew {
     private static void hitCard(Console con, String[][] deck) {
         addCardToPlayer(con, deck[intCardIndex]);
         intCardIndex++;
-        intPlayerTotal = reCalculateTotal(playerCardValues, intPlayerCardCount);
+        
         animateCardShuffle(con);
         blnCanDoubleDown = false;
-        intCardCount += 1;
-        System.out.println(intCardCount);
-        if (intCardCount == 5 && intPlayerTotal <= 21) {
-			drawScene(con);
-			determineWinner(con);
-		}
+
     }
 
 	//recalculates the total for the special case which is the ace
@@ -1034,15 +1034,13 @@ public class HasiniCPTNew {
      private static void dealerTurn(Console con, String[][] deck) {
         drawScene(con);
         while (intDealerTotal < 17 || intDealerTotal < intPlayerTotal) {
-			if (intDealerCardCountForArray == 5 && intDealerTotal <= 21){
-				determineWinner(con);
-				System.out.println("Nico wins");
+			if (intDealerCardCountForArray == 5){
 				break;
 				
 			}
             addCardToDealer(con, deck[intCardIndex]);
             intCardIndex++;
-            intDealerTotal = reCalculateTotal(dealerCardValues, intDealerCardCount);
+            
             drawScene(con);
             con.sleep(1000);
             intDealerCardCountForArray ++;
@@ -1053,14 +1051,14 @@ public class HasiniCPTNew {
 
     //if statement to determine the winner after the game is finished
     private static void determineWinner(Console con) {
-        if (intPlayerTotal == intDealerTotal && intPlayerTotal <= 21) {
+        if (intPlayerTotal == intDealerTotal && intPlayerTotal <= 21 && (intPlayerCardCount != 2 && intPlayerTotal == 21)) {
             dblMoney = dblMoney;
             con.sleep(2000);
             con.drawImage(imgTie, 0, 0);
             con.repaint();
             con.sleep(2000);
             con.drawImage(imgTie1, 0, 0);
-        } else if (intPlayerTotal > 21 || (intDealerTotal <= 21 && intPlayerTotal < intDealerTotal && intCardCount != 5)||intDealerCardCountForArray == 5) {
+        } else if (intPlayerTotal > 21 || (intDealerTotal <= 21 && intPlayerTotal < intDealerTotal && intPlayerCardCount != 5)) {
             con.sleep(2000);
             dblMoney = dblMoney - dblValue;
             con.drawImage(imgWinNico, 0, 0);
@@ -1068,11 +1066,17 @@ public class HasiniCPTNew {
             con.sleep(2000);
             con.drawImage(imgLose, 0, 0);
             //issue here is that when there is a blackjack and 5 cards, it does it twice still figuring out why--
-        } else if (intPlayerTotal == 21 || intDealerTotal > 21 || intPlayerTotal > intDealerTotal || (intPlayerTotal < 21 && intCardCount == 5)||(intPlayerTotal == 21 && intCardCount == 5)) {
+        } else if (intPlayerTotal == 21 || intDealerTotal > 21 || intPlayerTotal > intDealerTotal || (intPlayerTotal < 21 && intPlayerCardCount == 5)||(intPlayerTotal == 21 && intPlayerCardCount == 5)) {
             con.sleep(2000);
-            if (intPlayerTotal == 21 && intCardCount == 2){
+            if (intPlayerTotal == 21 && intPlayerCardCount == 2){
 				dblMoney = dblMoney + (2*dblValue);
 				con.drawImage(imgBlackjack, 0, 0);
+				con.repaint();
+				con.sleep(2000);
+			}else if (intPlayerTotal <= 21 && intPlayerCardCount == 5){
+				dblMoney = dblMoney + (2*dblValue);
+				con.drawImage(imgCharlie, 0, 0);
+				System.out.println("charlie rule");
 				con.repaint();
 				con.sleep(2000);
 			}else{
@@ -1084,7 +1088,6 @@ public class HasiniCPTNew {
 
             con.drawImage(imgWin, 0, 0);
         }
-        intCardCount = 2;
         intDealerCardCountForArray = 2;
         con.repaint();
         con.sleep(2000);
@@ -1116,7 +1119,7 @@ public class HasiniCPTNew {
 		con.drawString("$" + String.valueOf(dblValue), 1100, 256);
         displayDealerCards(con);
         displayPlayerCards(con);
-        if (blnPlayerTurn && intPlayerTotal < 21 && intCardCount != 5) {
+        if (blnPlayerTurn && intPlayerTotal < 21 && intPlayerCardCount != 5) {
             drawHitButton(con);
             drawStandButton(con);
             if (blnCanDoubleDown) {

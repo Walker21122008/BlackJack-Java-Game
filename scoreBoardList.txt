@@ -24,3 +24,5 @@ PinkFluffyUnicorns
 820.0
 hasini
 1180.0
+seto
+500.0
