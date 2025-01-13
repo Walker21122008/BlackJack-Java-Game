@@ -144,7 +144,7 @@ public class HasiniCPTNew {
         loadImages(con);
 
         int intCountMainPage = 0;
-        scoreBoardList = new TextOutputFile("scoreBoardList.txt", true);
+        scoreBoardList = new TextOutputFile("winners.txt", true);
 
         // Main animation loop.  Create flickering effect by using 2 images - main1 and main2
         while (intCountMainPage < 5) {
@@ -454,7 +454,7 @@ public class HasiniCPTNew {
         // Positioning the user entry with new lines and spaces
         // Adjust spacing as needed
         con.println("\n\n\n\n\n\n\n");
-        con.print("                                            ");  
+        con.print("                           ");  
         
         strUser = con.readLine(); // Read user input
 
@@ -648,20 +648,20 @@ public class HasiniCPTNew {
 		do {
 			drawStoryBoardPage(con, imgVal16);
 			con.setTextColor(Color.WHITE);
-			con.println("\n\n\n\n\n\n\n\n\n\n\n");
-            con.print("	                                     ");
+			con.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+            con.print("	                   ");
 			String input = con.readLine();
 			drawStoryBoardPage(con, imgVal16);
 			// Handle error conditions on the bet amount.
 			// 1. Bet Amount <= Wallet Amount
 			// 2. Bet Amount should be integer
 			try {
-				dblValue = Integer.parseInt(input);
+				dblValue = Double.parseDouble(input);
 			
-				if (dblValue > dblMoney) {
+				if (dblValue > dblMoney || dblValue == 0) {
 					// Print user message that value must be lesser for few seconds
 					con.setTextColor(Color.WHITE);
-					con.drawString("Value must be less than or equal to " + dblMoney + ". Try again.", 550, 650);
+					con.drawString("Value must be less than or equal to " + dblMoney + " and not equal to 0. Try again.", 550, 650);
 					con.repaint();
 					con.sleep(2000);
 					con.clear();
@@ -690,7 +690,7 @@ public class HasiniCPTNew {
 	private static void showHighScores(Console con) {
 		con.drawImage(imgScoreBoard, 0, 0);
 		con.repaint();
-		scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+		scoreBoardListInput = new TextInputFile("winners.txt");
 		readTopScoresFromFile(con);
 		displayScores(con);
 		con.drawImage(imgBackButton, 1080, 520);
@@ -1034,7 +1034,7 @@ public class HasiniCPTNew {
      private static void dealerTurn(Console con, String[][] deck) {
         drawScene(con);
         while (intDealerTotal < 17 || intDealerTotal < intPlayerTotal) {
-			if (intDealerCardCountForArray == 5){
+			if (intDealerCardCount == 5){
 				break;
 				
 			}
@@ -1044,56 +1044,59 @@ public class HasiniCPTNew {
             drawScene(con);
             con.sleep(1000);
             intDealerCardCountForArray ++;
-            System.out.println(intDealerCardCountForArray);
+            System.out.println(intDealerCardCount);
         }
         determineWinner(con);
     }
-
-    //if statement to determine the winner after the game is finished
-    private static void determineWinner(Console con) {
-        if (intPlayerTotal == intDealerTotal && intPlayerTotal <= 21 && (intPlayerCardCount != 2 && intPlayerTotal == 21)) {
-            dblMoney = dblMoney;
-            con.sleep(2000);
-            con.drawImage(imgTie, 0, 0);
-            con.repaint();
-            con.sleep(2000);
-            con.drawImage(imgTie1, 0, 0);
-        } else if (intPlayerTotal > 21 || (intDealerTotal <= 21 && intPlayerTotal < intDealerTotal && intPlayerCardCount != 5)) {
-            con.sleep(2000);
+	private static void determineWinner(Console con) {
+		if(intPlayerTotal > 21){ //player bust
+			con.sleep(2000);
             dblMoney = dblMoney - dblValue;
             con.drawImage(imgWinNico, 0, 0);
             con.repaint();
             con.sleep(2000);
             con.drawImage(imgLose, 0, 0);
-            //issue here is that when there is a blackjack and 5 cards, it does it twice still figuring out why--
-        } else if (intPlayerTotal == 21 || intDealerTotal > 21 || intPlayerTotal > intDealerTotal || (intPlayerTotal < 21 && intPlayerCardCount == 5)||(intPlayerTotal == 21 && intPlayerCardCount == 5)) {
+		}else if(intPlayerTotal == 21 && intPlayerCardCount == 2){//blackjack
+			con.sleep(2000);
+			dblMoney = dblMoney + (2*dblValue);
+			con.drawImage(imgBlackjack, 0, 0);
+			con.repaint();
+			con.sleep(2000);
+			con.drawImage(imgWin, 0, 0);
+		}else if(intPlayerCardCount == 5){//charlie rule
+			dblMoney = dblMoney + (2*dblValue);
+			con.drawImage(imgCharlie, 0, 0);
+			System.out.println("charlie rule");
+			con.repaint();
+			con.sleep(2000);
+			con.drawImage(imgWin, 0, 0);
+		}else if(intPlayerTotal == intDealerTotal){//tie
+			dblMoney = dblMoney;
             con.sleep(2000);
-            if (intPlayerTotal == 21 && intPlayerCardCount == 2){
-				dblMoney = dblMoney + (2*dblValue);
-				con.drawImage(imgBlackjack, 0, 0);
-				con.repaint();
-				con.sleep(2000);
-			}else if (intPlayerTotal <= 21 && intPlayerCardCount == 5){
-				dblMoney = dblMoney + (2*dblValue);
-				con.drawImage(imgCharlie, 0, 0);
-				System.out.println("charlie rule");
-				con.repaint();
-				con.sleep(2000);
-			}else{
-				dblMoney = dblMoney + dblValue;         
-				con.drawImage(imgWinVal, 0, 0);
-				con.repaint();
-				con.sleep(2000);
-			}
-
-            con.drawImage(imgWin, 0, 0);
-        }
-        intDealerCardCountForArray = 2;
-        con.repaint();
+            con.drawImage(imgTie, 0, 0);
+            con.repaint();
+            con.sleep(2000);
+            con.drawImage(imgTie1, 0, 0);
+		}else if(intPlayerTotal > intDealerTotal || intDealerTotal > 21){//player wins
+			dblMoney = dblMoney + dblValue;         
+			con.drawImage(imgWinVal, 0, 0);
+			con.repaint();
+			con.sleep(2000);
+			con.drawImage(imgWin, 0, 0);
+		}else{//dealer wins
+			con.sleep(2000);
+            dblMoney = dblMoney - dblValue;
+            con.drawImage(imgWinNico, 0, 0);
+            con.repaint();
+            con.sleep(2000);
+            con.drawImage(imgLose, 0, 0);
+		}
+		con.repaint();
         con.sleep(2000);
         blnGameEnded = true;
         drawScene(con);
-    }
+	}
+
 
 	//animates the card when the player presses hit to move the cards to the side
     private static void animateCardShuffle(Console con) {
@@ -1221,9 +1224,9 @@ public class HasiniCPTNew {
 	private static void showScoreBoard(Console con) {
         boolean bringScoreBoard = true;
         while (bringScoreBoard) {
-            con.drawImage(imgFinalBoard, 0, 0); // Changed imgFinalBoard to imgScoreBoard
+            con.drawImage(imgFinalBoard, 0, 0); 
             con.repaint();
-            scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+            scoreBoardListInput = new TextInputFile("winners.txt");
             readScoresFromFileFinal(con);
             sortScores(con);
             displayScoresFinal(con);
@@ -1279,7 +1282,7 @@ public class HasiniCPTNew {
     private static void searchUserAndPrintRank(Console con) {
         // count the number of users
         int userCount = 0;
-        scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+        scoreBoardListInput = new TextInputFile("winners.txt");
         while (!scoreBoardListInput.eof()) {
             scoreBoardListInput.readLine(); // name
             scoreBoardListInput.readLine(); // money
@@ -1293,7 +1296,7 @@ public class HasiniCPTNew {
         // populate the array and find user's money
         double userMoney = -1;
         int intIndex = 0;
-        scoreBoardListInput = new TextInputFile("scoreBoardList.txt");
+        scoreBoardListInput = new TextInputFile("winners.txt");
         while (!scoreBoardListInput.eof()) {
             String strName = scoreBoardListInput.readLine();
             String strMoney = scoreBoardListInput.readLine();
@@ -1408,11 +1411,11 @@ public class HasiniCPTNew {
 		do {
 			con.setTextColor(Color.WHITE);
 			con.setDrawColor(Color.WHITE);
-			con.println("\n\n\n\n\n\n\n\n\n\n\n");
-            con.print("	                                     ");
+			con.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+            con.print("	                      ");
 			String input = con.readLine();
 			try {
-				dblValue = Integer.parseInt(input);
+				dblValue = Double.parseDouble(input);
 				if (dblValue > dblMoney || dblValue < 0) {
 					con.setDrawColor(Color.WHITE);
 					displayErrorMessage(con, "Value must be less than or equal to " + dblMoney + ".");
