@@ -1,33 +1,31 @@
-import java.awt.Color;
 import arc.*;
-import java.awt.image.BufferedImage;
-import java.awt.Font;
 
 public class testingthisagain {
 
     public static void main(String[] args) {
         // Create a console window
-        Console con = new Console("Font Demo", 1280, 720);
-        Font fntFont=con.loadFont("font.ttf",50);
+        Console con = new Console("array lol", 1280, 720);
+        String strArray[][];
+        TextInputFile reading = new TextInputFile("winners.txt");
+        String strName;
+        String strScore;
+        int intValue = 0;
+        while (reading.eof() == false){
+			strName = reading.readLine();
+			strScore = reading.readLine();
+			intValue+=1;
+		}
+		reading.close();
+		TextInputFile reading2 = new TextInputFile("winners.txt");
+		strArray = new String[intValue][2];
+		for(int intRow = 0; intRow < intValue; intRow++){
+			strArray[intRow][0] = reading2.readLine();
+			strArray[intRow][1] = reading2.readLine();
+			con.println(strArray[intRow][0] + "-->" + strArray[intRow][1]);
+		}
+
         
-        // Define some fonts
-        Font font1 = new Font("Arial", Font.PLAIN, 24);
-        Font font2 = new Font("Times New Roman", Font.BOLD, 36);
-        Font font3 = new Font("Courier New", Font.ITALIC, 48);
-		
-		
-        // Draw text with different fonts
-        con.setTextFont(fntFont);
-        con.setTextColor(Color.WHITE);
-        con.readLine();
-        con.drawString("Hello, this is Arial!", 100, 100);
-
-
-
-        // Display the console
-        con.repaint();
     }
 
 }
 
-}

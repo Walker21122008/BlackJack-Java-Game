@@ -253,7 +253,6 @@ public class HasiniCPTNew {
 					//exits the program after a small animation
 					} else if (isButtonClicked(con, 800, 600, 200, 50)) {
 						loading(con);
-						con.println("Goodbye");
 						con.drawImage(imgMaybeNot, 0, 0);
 						con.repaint();
 						con.sleep(2000);
@@ -675,7 +674,7 @@ public class HasiniCPTNew {
 				con.sleep(2000);
 				con.clear();
 			}
-		} while (dblValue > dblMoney);
+		} while (dblValue > dblMoney || dblValue == 0);
 		
 		con.clear(); // Clear the console one last time
 		con.drawImage(imgVal16, 0, 0); // Redraw the image
@@ -1378,6 +1377,8 @@ public class HasiniCPTNew {
 	            } else if (isButtonClicked(con, 800, 600, 200, 50)) {
 	                saveScore(strUser, dblMoney);
 	                showScoreBoard(con);
+	                con.drawImage(imgBackButton, 1080, 520);
+	                
 	                return false;
 	            }
 	
@@ -1416,16 +1417,16 @@ public class HasiniCPTNew {
 			String input = con.readLine();
 			try {
 				dblValue = Double.parseDouble(input);
-				if (dblValue > dblMoney || dblValue < 0) {
+				if (dblValue > dblMoney || dblValue < 0 || dblValue == 0) {
 					con.setDrawColor(Color.WHITE);
-					displayErrorMessage(con, "Value must be less than or equal to " + dblMoney + ".");
+					displayErrorMessage(con, "Value must be < or = to " + dblMoney + " or greater than 0.");
 				}
 			} catch (NumberFormatException e) {
 				dblValue = 9999;
 				con.setDrawColor(Color.WHITE);
 				displayErrorMessage(con, "Invalid input. Please enter a number.");
 			}
-		} while (dblValue > dblMoney);
+		} while (dblValue > dblMoney || dblValue == 0);
 		
 		con.clear(); // Clear the console one last time
 		con.drawImage(imgVal16, 0, 0); // Redraw the image
