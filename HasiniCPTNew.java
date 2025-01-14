@@ -262,7 +262,7 @@ public class HasiniCPTNew {
 						con.sleep(2000);
 						playEndingAnimation(con);
 						con.sleep(2000);
-						System.exit(0); 
+						break;
 					}
 				
 				    con.sleep(16); // Short sleep to prevent excessive CPU usage
@@ -770,7 +770,7 @@ public class HasiniCPTNew {
 				if (i < 5) {
 					con.drawString(topNames[i] + ": " + topScores[i], 200, 180 + i * 90);
 				} else {
-					con.drawString(topNames[i] + ": " + topScores[i], 770, 180 + (i - 5) * 90);
+					con.drawString(topNames[i] + ": " + topScores[i], 770, 180 + (i - 5) * 92);
 				}
 				con.repaint();
 			}
