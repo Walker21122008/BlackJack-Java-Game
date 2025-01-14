@@ -40,3 +40,9 @@ hasini
 910.0
 hasini<3
 910.0
+inabile
+1008.89
+itsrainingtacos
+1089.0
+hasini
+994.6

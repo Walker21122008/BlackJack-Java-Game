@@ -457,7 +457,7 @@ public class HasiniCPTNew {
         // Positioning the user entry with new lines and spaces
         // Adjust spacing as needed
         con.println("\n\n\n\n\n\n\n");
-        con.print("                           ");  
+        con.print("                              ");  
         
         strUser = con.readLine(); // Read user input
 
@@ -694,36 +694,61 @@ public class HasiniCPTNew {
 		con.drawImage(imgScoreBoard, 0, 0);
 		con.repaint();
 		scoreBoardListInput = new TextInputFile("winners.txt");
+		
+		// Read top scores from file and display them
 		readTopScoresFromFile(con);
 		displayScores(con);
+		
 		con.drawImage(imgBackButton, 1080, 520);
 		con.repaint();
 	}
 
-	//method to read top scores from file
+	// Method to read top scores from file
 	private static void readTopScoresFromFile(Console con) {
-		for (int i = 0; i < intTOP_SCORES_COUNT; i++) {
-			topScores[i] = Double.MIN_VALUE;
-		}
-		
+		// Temporary storage for scores and names
+		String[] tempNames = new String[100]; // Assuming a maximum of 100 entries
+		double[] tempScores = new double[100];
+		int count = 0;
+
+		// Read the file and populate temporary arrays
 		while (!scoreBoardListInput.eof()) {
 			String name = scoreBoardListInput.readLine();
 			double score = Double.parseDouble(scoreBoardListInput.readLine());
-			updateTopScores(name, score);
+			
+			// Store names and scores in temporary arrays
+			tempNames[count] = name;
+			tempScores[count] = score;
+			count++;
 		}
+		
 		scoreBoardListInput.close();
+
+		// Determine the number of top scores to keep
+		int actualCount = Math.min(count, intTOP_SCORES_COUNT);
+		
+		// Initialize top scores and names arrays
+		topScores = new double[intTOP_SCORES_COUNT];
+		topNames = new String[intTOP_SCORES_COUNT];
+
+		// Populate top scores and names based on the temporary arrays
+		for (int i = 0; i < actualCount; i++) {
+			updateTopScores(tempNames[i], tempScores[i]);
+		}
 	}
 
-	//method to epdate the top scores
+	// Method to update the top scores
 	private static void updateTopScores(String name, double score) {
 		int insertIndex = -1;
+
+		// Find the position to insert the new score
 		for (int i = 0; i < intTOP_SCORES_COUNT; i++) {
 			if (score > topScores[i]) {
 				insertIndex = i;
 				break;
 			}
 		}
-		
+
+		// If we found a position to insert, shift existing entries
 		if (insertIndex != -1) {
 			for (int i = intTOP_SCORES_COUNT - 1; i > insertIndex; i--) {
 				topScores[i] = topScores[i - 1];
@@ -734,12 +759,13 @@ public class HasiniCPTNew {
 		}
 	}
 
-	//display total scores on the screen
+	// Display total scores on the screen
 	private static void displayScores(Console con) {
 		Font font2 = new Font("Courier New", Font.BOLD, 20);
 		con.setDrawFont(font2);
+		
 		for (int i = 0; i < intTOP_SCORES_COUNT; i++) {
-			if (topScores[i] != Double.MIN_VALUE) {
+			if (topScores[i] != 0) { // Check if there is a valid score
 				con.setDrawColor(Color.WHITE);
 				if (i < 5) {
 					con.drawString(topNames[i] + ": " + topScores[i], 200, 180 + i * 90);
@@ -750,6 +776,7 @@ public class HasiniCPTNew {
 			}
 		}
 	}
+
 
     
     //Draw story board page - Generic function reused from multiple places
