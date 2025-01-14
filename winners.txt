@@ -34,3 +34,9 @@ hasini
 83.0
 hasiniiii
 910.0
+hasini
+910.1
+hasini
+910.0
+hasini<3
+910.0

@@ -137,9 +137,13 @@ public class HasiniCPTNew {
     private static BufferedImage imgSpace;
     private static int intYellowX = 0; // Starting X position for yellow.png
     
+    private static Console con;
+    
     //Main game start
     public static void main(String[] args) {
-        Console con = new Console("Valentina Moretti", 1280, 720);
+		if (args.length == 0 || !args[0].equalsIgnoreCase("repeat")) {
+			con = new Console("Valentina Moretti", 1280, 720);
+		}
         Color darkGray = Color.decode("#262927");
         loadImages(con);
 
@@ -1230,8 +1234,16 @@ public class HasiniCPTNew {
             sortScores(con);
             displayScoresFinal(con);
             searchUserAndPrintRank(con);
+            con.drawImage(imgBackButton, 1080, 520);
             con.repaint();
             con.sleep(16);
+            if (isButtonClicked(con, 1080, 520, 200, 200)) {
+					bringScoreBoard = false;
+					String [] args = new String[1];
+					args[0] = "repeat";
+					main(args);
+					break; // Exit the while loop
+			}
         }
     }
 	
@@ -1377,7 +1389,6 @@ public class HasiniCPTNew {
 	            } else if (isButtonClicked(con, 800, 600, 200, 50)) {
 	                saveScore(strUser, dblMoney);
 	                showScoreBoard(con);
-	                con.drawImage(imgBackButton, 1080, 520);
 	                
 	                return false;
 	            }
