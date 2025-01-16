@@ -32,8 +32,8 @@ public class HasiniCPTNew {
     private static final int intSPEED = 5;
 	private static double dblMoney;
     private static int intCardIndex = 0;
-    private static BufferedImage[][] playerCards = new BufferedImage[5][2];
-    private static BufferedImage[][] dealerCards = new BufferedImage[5][2];
+    private static BufferedImage[][] imgPlayerCards = new BufferedImage[5][2];
+    private static BufferedImage[][] imgDealerCards = new BufferedImage[5][2];
     private static String[][] playerCardValues = new String[5][2];
     private static String[][] dealerCardValues = new String[5][2];
     private static int intPlayerCardCount = 0;
@@ -905,23 +905,23 @@ public class HasiniCPTNew {
     }
 
     //To determine whether the button in the input coordinates is clicked or not
-    private static boolean isButtonClicked(Console con, int x, int y, int width, int height) {
-        int mouseX = con.currentMouseX();
-        int mouseY = con.currentMouseY();
-        return con.currentMouseButton() == 1 && mouseX >= x && mouseX <= (x + width) && mouseY >= y && mouseY <= (y + height);
+    private static boolean isButtonClicked(Console con, int intX, int intY, int intWidth, int intHeight) {
+        int intMouseX = con.currentMouseX();
+        int intMouseY = con.currentMouseY();
+        return con.currentMouseButton() == 1 && intMouseX >= intX && intMouseX <= (intX + intWidth) && intMouseY >= intY && intMouseY <= (intY + intHeight);
     }
     
     //Method for the main gameplay
     private static boolean playGame(Console con) {
 		
 		//initializes the array
-        String[][] deck = new String[52][4];
-        String[] suits = {"D", "C", "H", "S"};
-        String[] values = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        String[][] strDeck = new String[52][4];
+        String[] strSuits = {"D", "C", "H", "S"};
+        String[] strValues = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
 
-        initializeDeck(deck, suits, values);
-        shuffleDeck(deck);
-        dealInitialCards(con, deck);
+        initializeDeck(strDeck, strSuits, strValues);
+        shuffleDeck(strDeck);
+        dealInitialCards(con, strDeck);
         drawScene(con);
         
         //if the player total is already 21, it's blackjack.  It goes to the determine winner method
@@ -933,22 +933,22 @@ public class HasiniCPTNew {
         while (!blnGameEnded) {
             if (blnPlayerTurn) {
                 if (isHitButtonClicked(con) && intPlayerTotal < 21) {
-                    hitCard(con, deck);
+                    hitCard(con, strDeck);
                     //If playerTotal > 21 (busted) or player got 5 cards (Charlie rule) - then determine winner
                     if (intPlayerTotal > 21 || intPlayerCardCount == 5) {
                         blnPlayerTurn = false;
                         determineWinner(con);
                     }else if(intPlayerTotal == 21){
 						blnPlayerTurn = false;
-						dealerTurn(con, deck);
+						dealerTurn(con, strDeck);
 					}
                 } else if (isStandButtonClicked(con)) {
                     blnPlayerTurn = false;
-                    dealerTurn(con, deck);
+                    dealerTurn(con, strDeck);
                 } else if (blnCanDoubleDown && isDoubleDownButtonClicked(con)) {
-                    doubleDown(con, deck);
+                    doubleDown(con, strDeck);
                     blnPlayerTurn = false;
-                    dealerTurn(con, deck);
+                    dealerTurn(con, strDeck);
                 }
             }
             drawScene(con);
@@ -959,15 +959,15 @@ public class HasiniCPTNew {
     }
 	
 	//Initializes the deck of cards
-    private static void initializeDeck(String[][] deck, String[] suits, String[] values) {
-        int index = 0;
-        for (String suit : suits) {
-            for (String value : values) {
-                deck[index][0] = value;
-                deck[index][1] = suit;
-                deck[index][2] = String.valueOf(getCardValue(value));
-                deck[index][3] = "images/cards/" + value + "-" + suit + ".png";
-                index++;
+    private static void initializeDeck(String[][] strDeck, String[] strSuits, String[] strValues) {
+        int intIndex = 0;
+        for (String strSuit : strSuits) {
+            for (String strValue : strValues) {
+                strDeck[intIndex][0] = strValue;
+                strDeck[intIndex][1] = strSuit;
+                strDeck[intIndex][2] = String.valueOf(getCardValue(strValue));
+                strDeck[intIndex][3] = "images/cards/" + strValue + "-" + strSuit + ".png";
+                intIndex++;
             }
         }
     }
@@ -987,12 +987,12 @@ public class HasiniCPTNew {
     }
     
     //algorithm to shuffle the deck of cards
-    private static void shuffleDeck(String[][] deck) {
-        for (int i = deck.length - 1; i > 0; i--) {
-            int j = (int)(Math.random() * (i + 1));
-            String[] temp = deck[i];
-            deck[i] = deck[j];
-            deck[j] = temp;
+    private static void shuffleDeck(String[][] strDeck) {
+        for (int intI = strDeck.length - 1; intI > 0; intI--) {
+            int intJ = (int)(Math.random() * (intI + 1));
+            String[] strTemp = strDeck[intI];
+            strDeck[intI] = strDeck[intJ];
+            strDeck[intJ] = strTemp;
         }
     }
 	
@@ -1009,7 +1009,7 @@ public class HasiniCPTNew {
 
 	//add a card to the player when this method is run
     private static void addCardToPlayer(Console con, String[] card) {
-        playerCards[intPlayerCardCount][0] = loadCardImage(con, card[3]);
+        imgPlayerCards[intPlayerCardCount][0] = loadCardImage(con, card[3]);
         playerCardValues[intPlayerCardCount][0] = card[0];
         intPlayerCardCount++;
         intPlayerTotal = reCalculateTotal(playerCardValues, intPlayerCardCount);
@@ -1018,7 +1018,7 @@ public class HasiniCPTNew {
 	
 	//adds a card to the dealer when this method is run
     private static void addCardToDealer(Console con, String[] card) {
-        dealerCards[intDealerCardCount][0] = loadCardImage(con, card[3]);
+        imgDealerCards[intDealerCardCount][0] = loadCardImage(con, card[3]);
         dealerCardValues[intDealerCardCount][0] = card[0];
         intDealerCardCount++;
         intDealerTotal = reCalculateTotal(dealerCardValues, intDealerCardCount);
@@ -1036,27 +1036,28 @@ public class HasiniCPTNew {
     }
 
 	//recalculates the total for the special case which is the ace
-    private static int reCalculateTotal(String[][] cardValues, int cardCount) {
-        int total = 0;
-        int aceCount = 0;
-        for (int i = 0; i < cardCount; i++) {
-            int value = getCardValue(cardValues[i][0]);
-            if (value == 11) {
-                aceCount++;
+    private static int reCalculateTotal(String[][] cardValues, int intCardCount) {
+        int intTotal = 0;
+        int intAceCount = 0;
+        for (int intI = 0; intI < intCardCount; intI++) {
+            int intValue = getCardValue(cardValues[intI][0]);
+            if (intValue == 11) {
+                intAceCount++;
             } else {
-                total += value;
+                intTotal += intValue;
             }
         }
-        for (int i = 0; i < aceCount; i++) {
-            if (total < 10) {
-                total += 11;
-            } else if (total == 10 && aceCount == 1) {
-				total += 11;
+    
+        for (int intI = 0; intI < intAceCount; intI++) {
+            if (intTotal < 10) {
+                intTotal += 11;
+            } else if (intTotal == 10 && intAceCount == 1) {
+				intTotal += 11;
 			} else {
-                total += 1;
+                intTotal += 1;
             }
         }
-        return total;
+        return intTotal;
     }
 
 	//method when it is time for the dealer's turn
@@ -1130,14 +1131,14 @@ public class HasiniCPTNew {
 
 	//animates the card when the player presses hit to move the cards to the side
     private static void animateCardShuffle(Console con) {
-        int totalWidth = (intPlayerCardCount - 1) * (intCARD_WIDTH + intCARD_SPACING);
-        int startX = 640 - totalWidth / 2;
-        for (int step = 0; step < intCARD_SPACING; step++) {
+        int intTotalWidth = (intPlayerCardCount - 1) * (intCARD_WIDTH + intCARD_SPACING);
+        int intStartX = 640 - intTotalWidth / 2;
+        for (int intStep = 0; intStep < intCARD_SPACING; intStep++) {
             drawScene(con);
-            for (int i = 0; i < intPlayerCardCount - 1; i++) {
-                con.drawImage(playerCards[i][0], startX + i * (intCARD_WIDTH + intCARD_SPACING) - step, 450);
+            for (int intI = 0; intI < intPlayerCardCount - 1; intI++) {
+                con.drawImage(imgPlayerCards[intI][0], intStartX + intI * (intCARD_WIDTH + intCARD_SPACING) - intStep, 450);
             }
-            con.drawImage(playerCards[intPlayerCardCount - 1][0], 1180, 450);
+            con.drawImage(imgPlayerCards[intPlayerCardCount - 1][0], 1180, 450);
             con.repaint();
             con.sleep(16);
         }
@@ -1165,22 +1166,22 @@ public class HasiniCPTNew {
 
 	//display's the player's cards on the screen
 	private static void displayPlayerCards(Console con) {
-		int totalWidth = (intPlayerCardCount - 1) * (intCARD_WIDTH + intCARD_SPACING);
-        int startX = 640 - totalWidth / 2;
+		int intTotalWidth = (intPlayerCardCount - 1) * (intCARD_WIDTH + intCARD_SPACING);
+        int intStartX = 640 - intTotalWidth / 2;
         for (int i = 0; i < intPlayerCardCount; i++) {
-            con.drawImage(playerCards[i][0], startX + i * (intCARD_WIDTH + intCARD_SPACING), 450);
+            con.drawImage(imgPlayerCards[i][0], intStartX + i * (intCARD_WIDTH + intCARD_SPACING), 450);
         }
 	}
 
 
 	//display's the dealer's cards
     private static void displayDealerCards(Console con) {
-        con.drawImage(dealerCards[0][0], 500, 0);
+        con.drawImage(imgDealerCards[0][0], 500, 0);
         if (blnPlayerTurn) {
             con.drawImage(imgCardBack, 600, 0);
         } else {
             for (int i = 1; i < intDealerCardCount; i++) {
-                con.drawImage(dealerCards[i][0], 500 + i * (intCARD_WIDTH + intCARD_SPACING), 0);
+                con.drawImage(imgDealerCards[i][0], 500 + i * (intCARD_WIDTH + intCARD_SPACING), 0);
             }
         }
     }
@@ -1252,8 +1253,8 @@ public class HasiniCPTNew {
 	
 	//displays the score board with the top 10 and the rank of the user who played recently
 	private static void showScoreBoard(Console con) {
-        boolean bringScoreBoard = true;
-        while (bringScoreBoard) {
+        boolean blnBringScoreBoard = true;
+        while (blnBringScoreBoard) {
             con.drawImage(imgFinalBoard, 0, 0); 
             con.repaint();
             scoreBoardListInput = new TextInputFile("winners.txt");
@@ -1265,7 +1266,7 @@ public class HasiniCPTNew {
             con.repaint();
             con.sleep(16);
             if (isButtonClicked(con, 1080, 520, 200, 200)) {
-					bringScoreBoard = false;
+					blnBringScoreBoard = false;
 					String [] args = new String[1];
 					args[0] = "repeat";
 					main(args);
@@ -1288,71 +1289,71 @@ public class HasiniCPTNew {
 
 	//sorts the scores using bubble sort
     private static void sortScores(Console con) {
-        for (int i = 0; i < intScoreCount - 1; i++) {
-            for (int j = 0; j < intScoreCount - i - 1; j++) {
-                if (scores[j] < scores[j + 1]) {
+        for (int intI = 0; intI < intScoreCount - 1; intI++) {
+            for (int intJ = 0; intJ < intScoreCount - intI - 1; intJ++) {
+                if (scores[intJ] < scores[intJ + 1]) {
                     // Swap scores
-                    double tempScore = scores[j];
-                    scores[j] = scores[j + 1];
-                    scores[j + 1] = tempScore;
+                    double dblTempScore = scores[intJ];
+                    scores[intJ] = scores[intJ + 1];
+                    scores[intJ + 1] = dblTempScore;
                     // Swap names
-                    String tempName = names[j];
-                    names[j] = names[j + 1];
-                    names[j + 1] = tempName;
+                    String dblTempName = names[intJ];
+                    names[intJ] = names[intJ + 1];
+                    names[intJ + 1] = dblTempName;
                 }
             }
         }
     }
 
     private static void displayScoresFinal(Console con) {
-        for (int i = 0; i < Math.min(5, intScoreCount); i++) {
+        for (int intI = 0; intI < Math.min(5, intScoreCount); intI++) {
             con.setDrawColor(Color.WHITE);
-            con.drawString(names[i] + ": " + scores[i], 300, 180 + i * 80);
+            con.drawString(names[intI] + ": " + scores[intI], 300, 180 + intI * 80);
             con.repaint();
         }
-        for (int i = 5; i < Math.min(10, intScoreCount); i++) {
+        for (int intI = 5; intI < Math.min(10, intScoreCount); intI++) {
             con.setDrawColor(Color.WHITE);
-            con.drawString(names[i] + ": " + scores[i], 790, 180 + (i - 5) * 80);
+            con.drawString(names[intI] + ": " + scores[intI], 790, 180 + (intI - 5) * 80);
             con.repaint();
         }
     }
 
     private static void searchUserAndPrintRank(Console con) {
         // count the number of users
-        int userCount = 0;
+        int intUserCount = 0;
         scoreBoardListInput = new TextInputFile("winners.txt");
         while (!scoreBoardListInput.eof()) {
             scoreBoardListInput.readLine(); // name
             scoreBoardListInput.readLine(); // money
-            userCount++;
+            intUserCount++;
         }
         scoreBoardListInput.close();
 
         // Create array with exact size
-        double[] allMoney = new double[userCount];
+        double[] dblAllMoney = new double[intUserCount];
 
         // populate the array and find user's money
-        double userMoney = -1;
+        double dblUserMoney = -1;
         int intIndex = 0;
         scoreBoardListInput = new TextInputFile("winners.txt");
         while (!scoreBoardListInput.eof()) {
             String strName = scoreBoardListInput.readLine();
             String strMoney = scoreBoardListInput.readLine();
-            allMoney[intIndex] = Double.parseDouble(strMoney);
+            dblAllMoney[intIndex] = Double.parseDouble(strMoney);
             if (strName.equalsIgnoreCase(strUser)) {
-                userMoney = allMoney[intIndex];
+                dblUserMoney = dblAllMoney[intIndex];
             }
             intIndex++;
         }
         scoreBoardListInput.close();
 
         // Sort the money array in descending order
-        bubbleSortDescending(allMoney);
+        bubbleSortDescending(dblAllMoney);
 
         // Find the user's rank
         int intRank = 1;
-        for (int i = 0; i < allMoney.length; i++) {
-            if (allMoney[i] == userMoney) {
+        for (int intI = 0; intI < dblAllMoney.length; intI++) {
+            if (dblAllMoney[intI] == dblUserMoney) {
                 break;
             }
             intRank++;
@@ -1362,15 +1363,15 @@ public class HasiniCPTNew {
         con.drawString(String.valueOf(intRank), 500, 650);
     }
 
-    private static void bubbleSortDescending(double[] arr) {
-        int n = arr.length;
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = 0; j < n - i - 1; j++) {
-                if (arr[j] < arr[j + 1]) {
+    private static void bubbleSortDescending(double[] dblArr) {
+        int intN = dblArr.length;
+        for (int intI = 0; intI < intN - 1; intI++) {
+            for (int intJ = 0; intJ < intN - intI - 1; intJ++) {
+                if (dblArr[intJ] < dblArr[intJ + 1]) {
                     // Swap elements
-                    double temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
+                    double dblTemp = dblArr[intJ];
+                    dblArr[intJ] = dblArr[intJ + 1];
+                    dblArr[intJ + 1] = dblTemp;
                 }
             }
         }
@@ -1452,9 +1453,9 @@ public class HasiniCPTNew {
 			con.setDrawColor(Color.WHITE);
 			con.println("\n\n\n\n\n\n\n\n\n\n\n\n");
             con.print("	                      ");
-			String input = con.readLine();
+			String strInput = con.readLine();
 			try {
-				dblValue = Double.parseDouble(input);
+				dblValue = Double.parseDouble(strInput);
 				if (dblValue > dblMoney || dblValue < 0 || dblValue == 0) {
 					con.setDrawColor(Color.WHITE);
 					displayErrorMessage(con, "Value must be < or = to " + dblMoney + " or greater than 0.");
@@ -1497,39 +1498,39 @@ public class HasiniCPTNew {
 	//method for when the play button is clicked
 	//stores the images in an array such that when "enter" is pressed on the keyboard each time, it goes through each image
 	private static void handleHelpButton(Console con) {
-		BufferedImage[] helpImages = {
+		BufferedImage[] imgHelpImages = {
 			imgHelp1, imgHelp2, imgHelp3, imgHelp5,
 			imgHelp6, imgHelp7, imgHelp8, imgHelp9, imgHelp10,
 			imgHelp11, imgHelp12, imgHelp13, imgHelp14, imgHelp15
 		};
 		
-		int currentImageIndex = 0;
+		int intCurrentImageIndex = 0;
 		
-		while (currentImageIndex < helpImages.length) {
+		while (intCurrentImageIndex < imgHelpImages.length) {
 			con.clear();
-			con.drawImage(helpImages[currentImageIndex], 0, 0);
+			con.drawImage(imgHelpImages[intCurrentImageIndex], 0, 0);
 			con.repaint();
 			
-			if (currentImageIndex == 8) { // At imgHelp10
+			if (intCurrentImageIndex == 8) { // At imgHelp10
 				con.setTextColor(Color.WHITE);
 				con.repaint();
 				String input = con.readLine();
 				
 				if (input.equals("13")) {
-					currentImageIndex = 11; // Show imgHelp11
+					intCurrentImageIndex = 11; // Show imgHelp11
 					con.drawImage(imgHelp11, 0, 0);
 					con.repaint();
 					con.sleep(2000);
 				} else {
-					currentImageIndex = 10; // Show imgHelp12
+					intCurrentImageIndex = 10; // Show imgHelp12
 					con.sleep(1000);
 				}
 			} else {
 				while (true) {
 					int key = con.currentChar();
 					if (key == 10) { // Enter key
-						System.out.println("Debug: currentImageIndex = " + currentImageIndex);  //Debug statement
-						currentImageIndex++;
+						System.out.println("Debug: currentImageIndex = " + intCurrentImageIndex);  //Debug statement
+						intCurrentImageIndex++;
 						con.sleep(1000);
 						break;
 					}

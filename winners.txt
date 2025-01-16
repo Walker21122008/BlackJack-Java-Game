@@ -46,3 +46,11 @@ itsrainingtacos
 1089.0
 hasini
 994.6
+Curtis
+170.0
+hasini
+40.0
+julian
+90.0
+statitan
+2000.0
