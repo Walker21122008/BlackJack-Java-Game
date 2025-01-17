@@ -27,21 +27,21 @@ public class HasiniCPTNew {
     private static final int intCARD_WIDTH = 100;
     private static final int intCARD_SPACING = 20;
 	private static final int intTOP_SCORES_COUNT = 10;
-	private static String[] topNames = new String[intTOP_SCORES_COUNT];
-	private static double[] topScores = new double[intTOP_SCORES_COUNT];
+	private static String[] strTopNames = new String[intTOP_SCORES_COUNT];
+	private static double[] dblTopScores = new double[intTOP_SCORES_COUNT];
     private static final int intSPEED = 5;
 	private static double dblMoney;
     private static int intCardIndex = 0;
     private static BufferedImage[][] imgPlayerCards = new BufferedImage[5][2];
     private static BufferedImage[][] imgDealerCards = new BufferedImage[5][2];
-    private static String[][] playerCardValues = new String[5][2];
-    private static String[][] dealerCardValues = new String[5][2];
+    private static String[][] strPlayerCardValues = new String[5][2];
+    private static String[][] strDealerCardValues = new String[5][2];
     private static int intPlayerCardCount = 0;
     private static int intDealerCardCount = 0;
     private static int intDealerCardCountForArray = 2;
     private static int intMAX_SCORES = 100;
-    private static String[] names = new String[intMAX_SCORES];
-    private static double[] scores = new double[intMAX_SCORES];
+    private static String[] strNames = new String[intMAX_SCORES];
+    private static double[] dblScores = new double[intMAX_SCORES];
     private static int intScoreCount = 0;
 
 
@@ -59,6 +59,7 @@ public class HasiniCPTNew {
     private static TextOutputFile scoreBoardList;
     private static TextInputFile scoreBoardListInput;
     
+    //image global variables
     private static BufferedImage imgLoad;
     private static BufferedImage imgBackButton;
     private static BufferedImage imgFinalBoard;
@@ -182,7 +183,7 @@ public class HasiniCPTNew {
             // If "Play" button is clicked
             if (isButtonClicked(con, 500, 200, 400, 150)) {
 				
-				
+				//loading screen
 				loading(con);
 				con.sleep(1000);
 
@@ -201,11 +202,12 @@ public class HasiniCPTNew {
 				boolean blnButtonClicked = false;
 				while (!blnButtonClicked) {
 					
-					int mouseX = con.currentMouseX();
-					int mouseY = con.currentMouseY();
+					//initialize mouse variables
+					int intMouseX = con.currentMouseX();
+					int intMouseY = con.currentMouseY();
 					
-					// Sure, let's play button
-					if (mouseX >= 490 && mouseX <= 690 && mouseY >= 600 && mouseY <= 650) {
+					// Sure, let's play button when mouse button is hovered, changes color to green from red
+					if (intMouseX >= 490 && intMouseX <= 690 && intMouseY >= 600 && intMouseY <= 650) {
 						con.setDrawColor(Color.GREEN);
 					} else {
 						con.setDrawColor(Color.RED);
@@ -215,8 +217,8 @@ public class HasiniCPTNew {
 					con.drawRect(480, 600, 220, 50);
 					con.drawString("Sure, let's play!", 490, 610);
 	
-					// Maybe not button
-					if (mouseX >= 800 && mouseX <= 1000 && mouseY >= 600 && mouseY <= 650) {
+					// Maybe not button when mouse button is hovered, changes color to green from red
+					if (intMouseX >= 800 && intMouseX <= 1000 && intMouseY >= 600 && intMouseY <= 650) {
 						con.setDrawColor(Color.GREEN);
 					} else {
 						con.setDrawColor(Color.RED);
@@ -273,6 +275,7 @@ public class HasiniCPTNew {
         // If High Score Button is clicked
         else if (isButtonClicked(con, 500, 370, 400, 150)) {
 				
+				//loading screen
 				loading(con);
 				con.sleep(1000);
 			
@@ -529,6 +532,7 @@ public class HasiniCPTNew {
 			con.sleep(16);
 		}
 		
+		//initialize position of x and y for the next pixel board scene animation
 		intLastXPosition = intX;
 		intLastYPosition = intY;
  
@@ -727,8 +731,8 @@ public class HasiniCPTNew {
 		int intActualCount = Math.min(intCount, intTOP_SCORES_COUNT);
 		
 		// Initialize top scores and names arrays
-		topScores = new double[intTOP_SCORES_COUNT];
-		topNames = new String[intTOP_SCORES_COUNT];
+		dblTopScores = new double[intTOP_SCORES_COUNT];
+		strTopNames = new String[intTOP_SCORES_COUNT];
 
 		// Populate top scores and names based on the temporary arrays
 		for (int intI = 0; intI < intActualCount; intI++) {
@@ -742,7 +746,7 @@ public class HasiniCPTNew {
 
 		// Find the position to insert the new score
 		for (int intI = 0; intI < intTOP_SCORES_COUNT; intI++) {
-			if (dblScore > topScores[intI]) {
+			if (dblScore > dblTopScores[intI]) {
 				intInsertIndex = intI;
 				break;
 			}
@@ -751,11 +755,11 @@ public class HasiniCPTNew {
 		// If we found a position to insert, shift existing entries
 		if (intInsertIndex != -1) {
 			for (int intI = intTOP_SCORES_COUNT - 1; intI > intInsertIndex; intI--) {
-				topScores[intI] = topScores[intI - 1];
-				topNames[intI] = topNames[intI - 1];
+				dblTopScores[intI] = dblTopScores[intI - 1];
+				strTopNames[intI] = strTopNames[intI - 1];
 			}
-			topScores[intInsertIndex] = dblScore;
-			topNames[intInsertIndex] = strName;
+			dblTopScores[intInsertIndex] = dblScore;
+			strTopNames[intInsertIndex] = strName;
 		}
 	}
 
@@ -765,12 +769,12 @@ public class HasiniCPTNew {
 		con.setDrawFont(font2);
 		
 		for (int intI = 0; intI < intTOP_SCORES_COUNT; intI++) {
-			if (topScores[intI] != 0) { // Check if there is a valid score
+			if (dblTopScores[intI] != 0) { // Check if there is a valid score
 				con.setDrawColor(Color.WHITE);
 				if (intI < 5) {
-					con.drawString(topNames[intI] + ": " + topScores[intI], 200, 180 + intI * 90);
+					con.drawString(strTopNames[intI] + ": " + dblTopScores[intI], 200, 180 + intI * 90);
 				} else {
-					con.drawString(topNames[intI] + ": " + topScores[intI], 770, 180 + (intI - 5) * 92);
+					con.drawString(strTopNames[intI] + ": " + dblTopScores[intI], 770, 180 + (intI - 5) * 92);
 				}
 				con.repaint();
 			}
@@ -911,10 +915,10 @@ public class HasiniCPTNew {
         return con.currentMouseButton() == 1 && intMouseX >= intX && intMouseX <= (intX + intWidth) && intMouseY >= intY && intMouseY <= (intY + intHeight);
     }
     
-    //Method for the main gameplay
+    //Method for the main gameplay to start blackjack
     private static boolean playGame(Console con) {
 		
-		//initializes the array
+		//initializes the 52x4 array
         String[][] strDeck = new String[52][4];
         String[] strSuits = {"D", "C", "H", "S"};
         String[] strValues = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
@@ -938,13 +942,16 @@ public class HasiniCPTNew {
                     if (intPlayerTotal > 21 || intPlayerCardCount == 5) {
                         blnPlayerTurn = false;
                         determineWinner(con);
+                    //if playerTotal is equal to 21, then dealer turn
                     }else if(intPlayerTotal == 21){
 						blnPlayerTurn = false;
 						dealerTurn(con, strDeck);
 					}
+				//if stand button is clicked, then dealer turn
                 } else if (isStandButtonClicked(con)) {
                     blnPlayerTurn = false;
                     dealerTurn(con, strDeck);
+                   //if double down button is clicked, adds a card and dealer turn
                 } else if (blnCanDoubleDown && isDoubleDownButtonClicked(con)) {
                     doubleDown(con, strDeck);
                     blnPlayerTurn = false;
@@ -972,9 +979,9 @@ public class HasiniCPTNew {
         }
     }
 
-    //gets the card value for each card
-    private static int getCardValue(String value) {
-        switch (value) {
+    //gets the card value for each card using new java code I learnt: cases
+    private static int getCardValue(String strValue) {
+        switch (strValue) {
             case "A":
                 return 11;
             case "K":
@@ -982,7 +989,7 @@ public class HasiniCPTNew {
             case "J":
                 return 10;
             default:
-                return Integer.parseInt(value);
+                return Integer.parseInt(strValue);
         }
     }
     
@@ -1010,24 +1017,24 @@ public class HasiniCPTNew {
 	//add a card to the player when this method is run
     private static void addCardToPlayer(Console con, String[] strCard) {
         imgPlayerCards[intPlayerCardCount][0] = loadCardImage(con, strCard[3]);
-        playerCardValues[intPlayerCardCount][0] = strCard[0];
+        strPlayerCardValues[intPlayerCardCount][0] = strCard[0];
         intPlayerCardCount++;
-        intPlayerTotal = reCalculateTotal(playerCardValues, intPlayerCardCount);
+        intPlayerTotal = reCalculateTotal(strPlayerCardValues, intPlayerCardCount);
     }
 	
 	
 	//adds a card to the dealer when this method is run
     private static void addCardToDealer(Console con, String[] strCard) {
         imgDealerCards[intDealerCardCount][0] = loadCardImage(con, strCard[3]);
-        dealerCardValues[intDealerCardCount][0] = strCard[0];
+        strDealerCardValues[intDealerCardCount][0] = strCard[0];
         intDealerCardCount++;
-        intDealerTotal = reCalculateTotal(dealerCardValues, intDealerCardCount);
+        intDealerTotal = reCalculateTotal(strDealerCardValues, intDealerCardCount);
     }
 
 
 	//when the user plays "hit"
-    private static void hitCard(Console con, String[][] deck) {
-        addCardToPlayer(con, deck[intCardIndex]);
+    private static void hitCard(Console con, String[][] strDeck) {
+        addCardToPlayer(con, strDeck[intCardIndex]);
         intCardIndex++;
         
         animateCardShuffle(con);
@@ -1036,11 +1043,11 @@ public class HasiniCPTNew {
     }
 
 	//recalculates the total for the special case which is the ace
-    private static int reCalculateTotal(String[][] cardValues, int intCardCount) {
+    private static int reCalculateTotal(String[][] strCardValues, int intCardCount) {
         int intTotal = 0;
         int intAceCount = 0;
         for (int intI = 0; intI < intCardCount; intI++) {
-            int intValue = getCardValue(cardValues[intI][0]);
+            int intValue = getCardValue(strCardValues[intI][0]);
             if (intValue == 11) {
                 intAceCount++;
             } else {
@@ -1280,8 +1287,8 @@ public class HasiniCPTNew {
     private static void readScoresFromFileFinal(Console con) {
         intScoreCount = 0;
         while (!scoreBoardListInput.eof() && intScoreCount < intMAX_SCORES) {
-            names[intScoreCount] = scoreBoardListInput.readLine();
-            scores[intScoreCount] = Double.parseDouble(scoreBoardListInput.readLine());
+            strNames[intScoreCount] = scoreBoardListInput.readLine();
+            dblScores[intScoreCount] = Double.parseDouble(scoreBoardListInput.readLine());
             intScoreCount++;
         }
         scoreBoardListInput.close();
@@ -1291,33 +1298,35 @@ public class HasiniCPTNew {
     private static void sortScores(Console con) {
         for (int intI = 0; intI < intScoreCount - 1; intI++) {
             for (int intJ = 0; intJ < intScoreCount - intI - 1; intJ++) {
-                if (scores[intJ] < scores[intJ + 1]) {
+                if (dblScores[intJ] < dblScores[intJ + 1]) {
                     // Swap scores
-                    double dblTempScore = scores[intJ];
-                    scores[intJ] = scores[intJ + 1];
-                    scores[intJ + 1] = dblTempScore;
+                    double dblTempScore = dblScores[intJ];
+                    dblScores[intJ] = dblScores[intJ + 1];
+                    dblScores[intJ + 1] = dblTempScore;
                     // Swap names
-                    String dblTempName = names[intJ];
-                    names[intJ] = names[intJ + 1];
-                    names[intJ + 1] = dblTempName;
+                    String dblTempName = strNames[intJ];
+                    strNames[intJ] = strNames[intJ + 1];
+                    strNames[intJ + 1] = dblTempName;
                 }
             }
         }
     }
-
+	
+	//displays the final scores for the score board --> first five on the left and second five on the left
     private static void displayScoresFinal(Console con) {
         for (int intI = 0; intI < Math.min(5, intScoreCount); intI++) {
             con.setDrawColor(Color.WHITE);
-            con.drawString(names[intI] + ": " + scores[intI], 300, 180 + intI * 80);
+            con.drawString(strNames[intI] + ": " + dblScores[intI], 300, 180 + intI * 80);
             con.repaint();
         }
         for (int intI = 5; intI < Math.min(10, intScoreCount); intI++) {
             con.setDrawColor(Color.WHITE);
-            con.drawString(names[intI] + ": " + scores[intI], 790, 180 + (intI - 5) * 80);
+            con.drawString(strNames[intI] + ": " + dblScores[intI], 790, 180 + (intI - 5) * 80);
             con.repaint();
         }
     }
 
+	//searches and prints the current rank of the user
     private static void searchUserAndPrintRank(Console con) {
         // count the number of users
         int intUserCount = 0;
@@ -1363,6 +1372,7 @@ public class HasiniCPTNew {
         con.drawString(String.valueOf(intRank), 500, 650);
     }
 
+	//bubble sort method
     private static void bubbleSortDescending(double[] dblArr) {
         int intN = dblArr.length;
         for (int intI = 0; intI < intN - 1; intI++) {
@@ -1477,10 +1487,10 @@ public class HasiniCPTNew {
 	}
 
 	//displays the error message
-	private static void displayErrorMessage(Console con, String message) {
+	private static void displayErrorMessage(Console con, String strMessage) {
 		drawGameScreen(con);
 		con.setTextColor(Color.WHITE);
-		con.drawString(message, 550, 650);
+		con.drawString(strMessage, 550, 650);
 		con.repaint();
 		con.sleep(2000);
 		con.clear();
@@ -1488,9 +1498,9 @@ public class HasiniCPTNew {
 	}
 	
 	//saves the scores to the file
-	private static void saveScore(String user, double money) {
-		scoreBoardList.println(user);
-		scoreBoardList.println(money);
+	private static void saveScore(String strUser, double dblMoney) {
+		scoreBoardList.println(strUser);
+		scoreBoardList.println(dblMoney);
 	}
 
 	
@@ -1527,11 +1537,11 @@ public class HasiniCPTNew {
 				}
 			} else {
 				while (true) {
-					int key = con.currentChar();
-					if (key == 10) { // Enter key
+					int intKey = con.currentChar();
+					if (intKey == 10) { // Enter key
 						System.out.println("Debug: currentImageIndex = " + intCurrentImageIndex);  //Debug statement
 						intCurrentImageIndex++;
-						con.sleep(1000);
+						con.sleep(160);
 						break;
 					}
 				}
