@@ -442,7 +442,7 @@ public class HasiniCPTNew {
     
     //method for the user to get the user's username
 	public static void captureUserName(Console con) {
-        BufferedImage statitan = con.loadImage("images/statitan.png");
+        BufferedImage imgStatitan = con.loadImage("images/statitan.png");
         imgNormalUser = con.loadImage("images/normal_user.png");
 
         // Load the custom font
@@ -464,7 +464,7 @@ public class HasiniCPTNew {
         // Cheatcode - statitan gets $2000. Other users get only $1000
         if (strUser.equalsIgnoreCase("statitan")) {
             con.clear();
-            con.drawImage(statitan, 0, 0);
+            con.drawImage(imgStatitan, 0, 0);
             con.repaint();
             dblMoney = 2000;
             con.sleep(2000);
@@ -706,56 +706,56 @@ public class HasiniCPTNew {
 	// Method to read top scores from file
 	private static void readTopScoresFromFile(Console con) {
 		// Temporary storage for scores and names
-		String[] tempNames = new String[100]; // Assuming a maximum of 100 entries
-		double[] tempScores = new double[100];
-		int count = 0;
+		String[] strTempNames = new String[100]; // Assuming a maximum of 100 entries
+		double[] dblTempScores = new double[100];
+		int intCount = 0;
 
 		// Read the file and populate temporary arrays
 		while (!scoreBoardListInput.eof()) {
-			String name = scoreBoardListInput.readLine();
-			double score = Double.parseDouble(scoreBoardListInput.readLine());
+			String strName = scoreBoardListInput.readLine();
+			double strScore = Double.parseDouble(scoreBoardListInput.readLine());
 			
 			// Store names and scores in temporary arrays
-			tempNames[count] = name;
-			tempScores[count] = score;
-			count++;
+			strTempNames[intCount] = strName;
+			dblTempScores[intCount] = strScore;
+			intCount++;
 		}
 		
 		scoreBoardListInput.close();
 
 		// Determine the number of top scores to keep
-		int actualCount = Math.min(count, intTOP_SCORES_COUNT);
+		int intActualCount = Math.min(intCount, intTOP_SCORES_COUNT);
 		
 		// Initialize top scores and names arrays
 		topScores = new double[intTOP_SCORES_COUNT];
 		topNames = new String[intTOP_SCORES_COUNT];
 
 		// Populate top scores and names based on the temporary arrays
-		for (int i = 0; i < actualCount; i++) {
-			updateTopScores(tempNames[i], tempScores[i]);
+		for (int intI = 0; intI < intActualCount; intI++) {
+			updateTopScores(strTempNames[intI], dblTempScores[intI]);
 		}
 	}
 
 	// Method to update the top scores
-	private static void updateTopScores(String name, double score) {
-		int insertIndex = -1;
+	private static void updateTopScores(String strName, double dblScore) {
+		int intInsertIndex = -1;
 
 		// Find the position to insert the new score
-		for (int i = 0; i < intTOP_SCORES_COUNT; i++) {
-			if (score > topScores[i]) {
-				insertIndex = i;
+		for (int intI = 0; intI < intTOP_SCORES_COUNT; intI++) {
+			if (dblScore > topScores[intI]) {
+				intInsertIndex = intI;
 				break;
 			}
 		}
 
 		// If we found a position to insert, shift existing entries
-		if (insertIndex != -1) {
-			for (int i = intTOP_SCORES_COUNT - 1; i > insertIndex; i--) {
-				topScores[i] = topScores[i - 1];
-				topNames[i] = topNames[i - 1];
+		if (intInsertIndex != -1) {
+			for (int intI = intTOP_SCORES_COUNT - 1; intI > intInsertIndex; intI--) {
+				topScores[intI] = topScores[intI - 1];
+				topNames[intI] = topNames[intI - 1];
 			}
-			topScores[insertIndex] = score;
-			topNames[insertIndex] = name;
+			topScores[intInsertIndex] = dblScore;
+			topNames[intInsertIndex] = strName;
 		}
 	}
 
@@ -764,13 +764,13 @@ public class HasiniCPTNew {
 		Font font2 = new Font("Courier New", Font.BOLD, 20);
 		con.setDrawFont(font2);
 		
-		for (int i = 0; i < intTOP_SCORES_COUNT; i++) {
-			if (topScores[i] != 0) { // Check if there is a valid score
+		for (int intI = 0; intI < intTOP_SCORES_COUNT; intI++) {
+			if (topScores[intI] != 0) { // Check if there is a valid score
 				con.setDrawColor(Color.WHITE);
-				if (i < 5) {
-					con.drawString(topNames[i] + ": " + topScores[i], 200, 180 + i * 90);
+				if (intI < 5) {
+					con.drawString(topNames[intI] + ": " + topScores[intI], 200, 180 + intI * 90);
 				} else {
-					con.drawString(topNames[i] + ": " + topScores[i], 770, 180 + (i - 5) * 92);
+					con.drawString(topNames[intI] + ": " + topScores[intI], 770, 180 + (intI - 5) * 92);
 				}
 				con.repaint();
 			}
@@ -793,32 +793,32 @@ public class HasiniCPTNew {
     //ending animation when maybe not is clicked
     private static void playEndingAnimation(Console con) {
 		BufferedImage miniStoryBoard = con.loadImage("images/miniStoryBoard.png");
-				BufferedImage val_pix = con.loadImage("images/pix_val.png");
-				BufferedImage nico_pix = con.loadImage("images/pix_nico.png");
-				BufferedImage nico_pix_1 = con.loadImage("images/pix_nico_1.png");
-		int x = 900;
-		int y = 0;
-		int nico_x = 800;
-		int nico_y = 0;
+		BufferedImage imgVal_pix = con.loadImage("images/pix_val.png");
+		BufferedImage imgNico_pix = con.loadImage("images/pix_nico.png");
+		BufferedImage imgNico_pix_1 = con.loadImage("images/pix_nico_1.png");
+		int intX = 900;
+		int intY = 0;
+		int intNico_x = 800;
+		int intNico_y = 0;
 
-		while (y < 250) {
-			y += intSPEED;
+		while (intY < 250) {
+		    intY += intSPEED;
 			con.drawImage(miniStoryBoard, 0, 0);
 			con.drawImage(imgMoneyBoard, 0, 0);
 			con.drawString("$" + String.valueOf(dblMoney), 1080, 50);
-			con.drawImage(val_pix, x, y);
-			con.drawImage(nico_pix, nico_x, nico_y);
+			con.drawImage(imgVal_pix, intX, intY);
+			con.drawImage(imgNico_pix, intNico_x, intNico_y);
 			con.repaint();
 			con.sleep(16);
 		} 
 
-		while (x > 0) {
-			x -= intSPEED; // Changed += to -= to move left
+		while (intX > 0) {
+			intX -= intSPEED; // Changed += to -= to move left
 			con.drawImage(miniStoryBoard, 0, 0);
 			con.drawImage(imgMoneyBoard, 0, 0);
 			con.drawString("$" + String.valueOf(dblMoney), 1080, 50);
-			con.drawImage(val_pix, x, y);
-			con.drawImage(nico_pix, nico_x, nico_y);
+			con.drawImage(imgVal_pix, intX, intY);
+			con.drawImage(imgNico_pix, intNico_x, intNico_y);
 			con.repaint();
 			con.sleep(16); // Approximately 60 FPS
 		}
@@ -827,12 +827,12 @@ public class HasiniCPTNew {
     
     
     //animates the play button by changing x-coordinate values and repainting.
-    private static void animateButton(Console con, BufferedImage background, BufferedImage button, int y) {
-        int x = 1280;
-        while (x > 500) {
-            x -= 30;
-            con.drawImage(background, 0, 0);
-            con.drawImage(button, x, y);
+    private static void animateButton(Console con, BufferedImage imgBackground, BufferedImage imgButton, int intY) {
+        int intX = 1280;
+        while (intX > 500) {
+            intX -= 30;
+            con.drawImage(imgBackground, 0, 0);
+            con.drawImage(imgButton, intX, intY);
             con.repaint();
             con.sleep(16);
         }
@@ -852,7 +852,7 @@ public class HasiniCPTNew {
 					con.sleep(1);
 				}
 				
-			for (int i = intSTART_X; i <= intEND_X; i += 2) {
+			for (int intI = intSTART_X; intI <= intEND_X; intI += 2) {
 				// Clear the screen
 				con.clear();
 
@@ -861,7 +861,7 @@ public class HasiniCPTNew {
 
 				// Draw the loading bar
 				con.setDrawColor(Color.WHITE);
-				con.fillRect(i, 530, intBAR_WIDTH, intBAR_HEIGHT);
+				con.fillRect(intI, 530, intBAR_WIDTH, intBAR_HEIGHT);
 
 				// Draw the border of the loading bar
 				con.setDrawColor(Color.BLACK);
@@ -878,27 +878,27 @@ public class HasiniCPTNew {
     
     
     //animates the high score button.  play button is kept in fixed position
-    private static void animateButton(Console con, BufferedImage background, BufferedImage button1, BufferedImage button2, int y) {
-        int x = 1280;
-        while (x > 500) {
-            x -= 30;
-            con.drawImage(background, 0, 0);
-            con.drawImage(button1, 500, 200);
-            con.drawImage(button2, x, y);
+    private static void animateButton(Console con, BufferedImage imgBackground, BufferedImage imgButton1, BufferedImage imgButton2, int intY) {
+        int intX = 1280;
+        while (intX > 500) {
+            intX -= 30;
+            con.drawImage(imgBackground, 0, 0);
+            con.drawImage(imgButton1, 500, 200);
+            con.drawImage(imgButton2, intX, intY);
             con.repaint();
             con.sleep(16);
         }
     }
     
     //animates the quit button.  play button and high score button are kept in fixed position
-    private static void animateButton(Console con, BufferedImage background, BufferedImage button1, BufferedImage button2, BufferedImage button3, int y) {
-        int x = 1280;
-        while (x > 500) {
-            x -= 30;
-            con.drawImage(background, 0, 0);
-            con.drawImage(button1, 500, 200);
-            con.drawImage(button2, 500, 370);
-            con.drawImage(button3, x, y);
+    private static void animateButton(Console con, BufferedImage imgBackground, BufferedImage imgButton1, BufferedImage imgButton2, BufferedImage imgButton3, int intY) {
+        int intX = 1280;
+        while (intX > 500) {
+            intX -= 30;
+            con.drawImage(imgBackground, 0, 0);
+            con.drawImage(imgButton1, 500, 200);
+            con.drawImage(imgButton2, 500, 370);
+            con.drawImage(imgButton3, intX, intY);
             con.repaint();
             con.sleep(16);
         }
@@ -997,29 +997,29 @@ public class HasiniCPTNew {
     }
 	
 	//deals the first 2 cards for the player and the dealer
-    private static void dealInitialCards(Console con, String[][] deck) {
-        for (int i = 0; i < 2; i++) {
-            addCardToPlayer(con, deck[intCardIndex]);
+    private static void dealInitialCards(Console con, String[][] strDeck) {
+        for (int intI = 0; intI < 2; intI++) {
+            addCardToPlayer(con, strDeck[intCardIndex]);
             intCardIndex++;
-            addCardToDealer(con, deck[intCardIndex]);
+            addCardToDealer(con, strDeck[intCardIndex]);
             intCardIndex++;
         }
         blnCanDoubleDown = (intPlayerTotal == 9 || intPlayerTotal == 10 || intPlayerTotal == 11);
     }
 
 	//add a card to the player when this method is run
-    private static void addCardToPlayer(Console con, String[] card) {
-        imgPlayerCards[intPlayerCardCount][0] = loadCardImage(con, card[3]);
-        playerCardValues[intPlayerCardCount][0] = card[0];
+    private static void addCardToPlayer(Console con, String[] strCard) {
+        imgPlayerCards[intPlayerCardCount][0] = loadCardImage(con, strCard[3]);
+        playerCardValues[intPlayerCardCount][0] = strCard[0];
         intPlayerCardCount++;
         intPlayerTotal = reCalculateTotal(playerCardValues, intPlayerCardCount);
     }
 	
 	
 	//adds a card to the dealer when this method is run
-    private static void addCardToDealer(Console con, String[] card) {
-        imgDealerCards[intDealerCardCount][0] = loadCardImage(con, card[3]);
-        dealerCardValues[intDealerCardCount][0] = card[0];
+    private static void addCardToDealer(Console con, String[] strCard) {
+        imgDealerCards[intDealerCardCount][0] = loadCardImage(con, strCard[3]);
+        dealerCardValues[intDealerCardCount][0] = strCard[0];
         intDealerCardCount++;
         intDealerTotal = reCalculateTotal(dealerCardValues, intDealerCardCount);
     }
