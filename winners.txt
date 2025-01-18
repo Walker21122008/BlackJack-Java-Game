@@ -54,3 +54,5 @@ julian
 90.0
 statitan
 2000.0
+chloe
+603.0

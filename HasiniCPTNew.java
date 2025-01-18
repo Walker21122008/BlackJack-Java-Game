@@ -310,8 +310,7 @@ public class HasiniCPTNew {
 		
 		//when quit button is clicked, it automatically exits the game
         else if (isButtonClicked(con, 500, 540, 400, 150)) {
-                    con.println("Quit button clicked");
-                    blnRunning = false; // Exit the game loop
+                    System.exit(0);
         }
 
         con.sleep(16); 
@@ -462,7 +461,7 @@ public class HasiniCPTNew {
         con.println("\n\n\n\n\n\n\n");
         con.print("                              ");  
         
-        strUser = con.readLine(); // Read user input
+        strUser = con.readLine(); // Read user input and stores it in strUser
 
         // Cheatcode - statitan gets $2000. Other users get only $1000
         if (strUser.equalsIgnoreCase("statitan")) {
@@ -513,7 +512,7 @@ public class HasiniCPTNew {
 			con.drawImage(imgVal_pix, intX, intY);
 			con.repaint();
 			
-			//key controls to move the character to meet nico
+			//key controls to move the character to meet nico like up, down, left, right
 			int intKey = con.getKey();
 			if (intKey == 38 && intY > intTopBoundary) 
 			{
@@ -815,7 +814,8 @@ public class HasiniCPTNew {
 			con.repaint();
 			con.sleep(16);
 		} 
-
+		
+		//animations for the pixel characters
 		while (intX > 0) {
 			intX -= intSPEED; // Changed += to -= to move left
 			con.drawImage(miniStoryBoard, 0, 0);
@@ -962,6 +962,7 @@ public class HasiniCPTNew {
             con.sleep(10);
         }
 
+	//ask the user if he/she wants to play again
         return askPlayAgain(con);
     }
 	
@@ -1042,7 +1043,7 @@ public class HasiniCPTNew {
 
     }
 
-	//recalculates the total for the special case which is the ace
+	//recalculates the total for the special case which is the ace to recalculate it
     private static int reCalculateTotal(String[][] strCardValues, int intCardCount) {
         int intTotal = 0;
         int intAceCount = 0;
@@ -1086,6 +1087,8 @@ public class HasiniCPTNew {
         }
         determineWinner(con);
     }
+    
+    //method to determine the winner
 	private static void determineWinner(Console con) {
 		if(intPlayerTotal > 21){ //player bust
 			con.sleep(2000);
@@ -1193,7 +1196,7 @@ public class HasiniCPTNew {
         }
     }
 
-	//loads the image
+	//loads the images
     private static BufferedImage loadCardImage(Console con, String imagePath) {
         return con.loadImage(imagePath);
     }
@@ -1461,9 +1464,11 @@ public class HasiniCPTNew {
 		do {
 			con.setTextColor(Color.WHITE);
 			con.setDrawColor(Color.WHITE);
+			//spacing to let the user enter their bet
 			con.println("\n\n\n\n\n\n\n\n\n\n\n\n");
             con.print("	                      ");
 			String strInput = con.readLine();
+			//try and catch exception error
 			try {
 				dblValue = Double.parseDouble(strInput);
 				if (dblValue > dblMoney || dblValue < 0 || dblValue == 0) {
@@ -1516,6 +1521,7 @@ public class HasiniCPTNew {
 		
 		int intCurrentImageIndex = 0;
 		
+		//goes through each image and checks the page logic when it is time for the user should ansert the question
 		while (intCurrentImageIndex < imgHelpImages.length) {
 			con.clear();
 			con.drawImage(imgHelpImages[intCurrentImageIndex], 0, 0);
@@ -1538,7 +1544,7 @@ public class HasiniCPTNew {
 			} else {
 				while (true) {
 					int intKey = con.currentChar();
-					if (intKey == 10) { // Enter key
+					if (intKey == 10) { // Checks if user clicked the Enter key
 						System.out.println("Debug: currentImageIndex = " + intCurrentImageIndex);  //Debug statement
 						intCurrentImageIndex++;
 						con.sleep(160);
@@ -1550,7 +1556,7 @@ public class HasiniCPTNew {
 		}
 	}
 
-	//resets the game status
+	//resets the game status by resetting all the variables
     private static void resetGameState() {
         intCardIndex = 0;
         intPlayerCardCount = 0;
