@@ -310,7 +310,7 @@ public class HasiniCPTNew {
 		
 		//when quit button is clicked, it automatically exits the game
         else if (isButtonClicked(con, 500, 540, 400, 150)) {
-                    System.exit(0);
+            System.exit(0);
         }
 
         con.sleep(16); 
