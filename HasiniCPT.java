@@ -146,6 +146,7 @@ public class HasiniCPT {
     if (args.length == 0 || !args[0].equalsIgnoreCase("repeat")) {
       con = new Console("Valentina Moretti", 1280, 720);
     }
+    
     Color darkGray = Color.decode("#262927");
     loadImages(con);
 
@@ -502,12 +503,11 @@ public class HasiniCPT {
     con.drawImage(imgNico_pix, 580, 250);
     con.drawImage(imgVal_pix, intX, intY);
     con.repaint();
-    con.sleep(5000);
 
     //does this loop while the x value of the val pizel character is not equal to the right boundary variable
     while (intX != intRightBoundary) {
       con.clear();
-      con.drawImage(imgMiniStoryBoard, 0, 0);
+      con.drawImage(imgInstructionboard, 0, 0);
       con.drawImage(imgMoneyBoard, 0, 0);
       con.drawString("$" + String.valueOf(dblMoney), 1080, 50);
       con.drawImage(imgNico_pix, 580, 250);
