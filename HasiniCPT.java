@@ -141,6 +141,7 @@ public class HasiniCPT {
   private static Console con;
 
   //Main game start
+  //starts the game if args is not "repeat"
   public static void main(String[] args) {
     if (args.length == 0 || !args[0].equalsIgnoreCase("repeat")) {
       con = new Console("Valentina Moretti", 1280, 720);
@@ -171,6 +172,7 @@ public class HasiniCPT {
     // Main game loop
     boolean blnRunning = true;
     while (blnRunning) {
+	  //displays the main screen after the animations
       con.drawImage(imgMain2, 0, 0);
       con.drawImage(imgPlay, 500, 200);
       con.drawImage(imgHigh, 500, 370);
@@ -267,7 +269,7 @@ public class HasiniCPT {
             break;
           }
 
-          con.sleep(16); // Short sleep to prevent excessive CPU usage
+          con.sleep(16);
         }  // while !button clicked
 
       } // end of if play button clicked
@@ -668,6 +670,7 @@ public class HasiniCPT {
           con.sleep(2000);
           con.clear();
         }
+        //exception error handling
       } catch (NumberFormatException e) {
         // If entered amount is not valid, then print user mesage accordingy.
         dblValue = 9999;
@@ -677,6 +680,7 @@ public class HasiniCPT {
         con.sleep(2000);
         con.clear();
       }
+      //while the bet value is greater than or equal to 0
     } while (dblValue > dblMoney || dblValue == 0);
 
     con.clear(); // Clear the console one last time
@@ -688,7 +692,6 @@ public class HasiniCPT {
   }
 
   //reads the scoreboard file, create list, sort by scores and display top 10 scores
-
   private static void showHighScores(Console con) {
     con.drawImage(imgScoreBoard, 0, 0);
     con.repaint();
@@ -702,7 +705,7 @@ public class HasiniCPT {
   }
 
 
-  // Display total scores on the screen
+  // Display the high scores on the screen - first 5 on one side and second 5 on the other side
   private static void displayScores(Console con) {
     Font fntFont2 = new Font("Courier New", Font.BOLD, 20);
     con.setDrawFont(fntFont2);
