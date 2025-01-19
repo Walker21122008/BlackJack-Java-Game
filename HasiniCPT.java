@@ -126,7 +126,7 @@ public class HasiniCPT {
   private static int intLastXPosition;
   private static int intLastYPosition;
 
-  private static boolean showGreenScreen = false;
+  private static boolean blnShowGreenScreen = false;
   private static BufferedImage imgYellow;
   private static BufferedImage imgRed;
   private static BufferedImage imgYellowSlap;
@@ -279,15 +279,15 @@ public class HasiniCPT {
         loading(con);
         con.sleep(1000);
 
-        boolean bringScoreBoard = true;
-        while (bringScoreBoard) {
+        boolean blnBringScoreBoard = true;
+        while (blnBringScoreBoard) {
           //call function which sreads the scoreboard file, create list,
           //sort by scores and display top 10 scores
           showHighScores(con);
 
           // Keep the same screen until player clicks back button
           if (isButtonClicked(con, 1080, 520, 200, 200)) {
-            bringScoreBoard = false;
+            blnBringScoreBoard = false;
             break; // Exit the while loop
           }
 
@@ -298,9 +298,9 @@ public class HasiniCPT {
         //When the hidden black joke button is clicked at the top right corner of the screen
         //among us animation
       } else if (isButtonClicked(con, 1240, 0, 40, 40)) {
-        showGreenScreen = true;
+        blnShowGreenScreen = true;
         intYellowX = 0; // Reset yellow position when animation starts
-        while(showGreenScreen) {
+        while(blnShowGreenScreen) {
           runAnimation(con);
         }
         //help button when clicked goes to the help screens
@@ -332,7 +332,7 @@ public class HasiniCPT {
     // Check if yellow has reached red
     if (intYellowX >= 550) {
       playEndSequence(con);
-      showGreenScreen = false;
+      blnShowGreenScreen = false;
       intYellowX = 0; // Reset for next time
       con.clear(); // Clear the screen before returning to start
     }
@@ -652,13 +652,13 @@ public class HasiniCPT {
       con.setTextColor(Color.WHITE);
       con.println("\n\n\n\n\n\n\n\n\n\n\n\n");
       con.print("	                   ");
-      String input = con.readLine();
+      String strInput = con.readLine();
       drawStoryBoardPage(con, imgVal16);
       // Handle error conditions on the bet amount.
       // 1. Bet Amount <= Wallet Amount
       // 2. Bet Amount should be integer
       try {
-        dblValue = Double.parseDouble(input);
+        dblValue = Double.parseDouble(strInput);
 
         if (dblValue > dblMoney || dblValue == 0) {
           // Print user message that value must be lesser for few seconds
@@ -704,8 +704,8 @@ public class HasiniCPT {
 
   // Display total scores on the screen
   private static void displayScores(Console con) {
-    Font font2 = new Font("Courier New", Font.BOLD, 20);
-    con.setDrawFont(font2);
+    Font fntFont2 = new Font("Courier New", Font.BOLD, 20);
+    con.setDrawFont(fntFont2);
 
     for (int intI = 0; intI < Math.min(5, intScoreCount); intI++) {
       con.setDrawColor(Color.WHITE);
@@ -1009,14 +1009,14 @@ public class HasiniCPT {
 
   //method when it is time for the dealer's turn
   //has to be checked still
-  private static void dealerTurn(Console con, String[][] deck) {
+  private static void dealerTurn(Console con, String[][] strDeck) {
     drawScene(con);
     while (intDealerTotal < 17 || intDealerTotal < intPlayerTotal) {
       if (intDealerCardCount == 5) {
         break;
 
       }
-      addCardToDealer(con, deck[intCardIndex]);
+      addCardToDealer(con, strDeck[intCardIndex]);
       intCardIndex++;
 
       drawScene(con);
@@ -1117,8 +1117,8 @@ public class HasiniCPT {
   private static void displayPlayerCards(Console con) {
     int intTotalWidth = (intPlayerCardCount - 1) * (intCARD_WIDTH + intCARD_SPACING);
     int intStartX = 640 - intTotalWidth / 2;
-    for (int i = 0; i < intPlayerCardCount; i++) {
-      con.drawImage(imgPlayerCards[i][0], intStartX + i * (intCARD_WIDTH + intCARD_SPACING), 450);
+    for (int intI = 0; intI < intPlayerCardCount; intI++) {
+      con.drawImage(imgPlayerCards[intI][0], intStartX + intI * (intCARD_WIDTH + intCARD_SPACING), 450);
     }
   }
 
@@ -1129,15 +1129,15 @@ public class HasiniCPT {
     if (blnPlayerTurn) {
       con.drawImage(imgCardBack, 600, 0);
     } else {
-      for (int i = 1; i < intDealerCardCount; i++) {
-        con.drawImage(imgDealerCards[i][0], 500 + i * (intCARD_WIDTH + intCARD_SPACING), 0);
+      for (int intI = 1; intI < intDealerCardCount; intI++) {
+        con.drawImage(imgDealerCards[intI][0], 500 + intI * (intCARD_WIDTH + intCARD_SPACING), 0);
       }
     }
   }
 
   //loads the images
-  private static BufferedImage loadCardImage(Console con, String imagePath) {
-    return con.loadImage(imagePath);
+  private static BufferedImage loadCardImage(Console con, String strImagePath) {
+    return con.loadImage(strImagePath);
   }
 
   //draws the hit button
@@ -1183,9 +1183,9 @@ public class HasiniCPT {
   }
 
   //method for when double down is clicked
-  private static void doubleDown(Console con, String[][] deck) {
+  private static void doubleDown(Console con, String[][] strDeck) {
     dblValue = dblValue*2;
-    hitCard(con, deck);
+    hitCard(con, strDeck);
     if (intPlayerTotal > 21) {
       determineWinner(con);
     }
@@ -1216,9 +1216,9 @@ public class HasiniCPT {
       con.sleep(16);
       if (isButtonClicked(con, 1080, 520, 200, 200)) {
         blnBringScoreBoard = false;
-        String [] args = new String[1];
-        args[0] = "repeat";
-        main(args);
+        String [] strArgs = new String[1];
+        strArgs[0] = "repeat";
+        main(strArgs);
         break; // Exit the while loop
       }
     }
@@ -1246,9 +1246,9 @@ public class HasiniCPT {
           dblScores[intJ] = dblScores[intJ + 1];
           dblScores[intJ + 1] = dblTempScore;
           // Swap names
-          String dblTempName = strNames[intJ];
+          String strTempName = strNames[intJ];
           strNames[intJ] = strNames[intJ + 1];
-          strNames[intJ + 1] = dblTempName;
+          strNames[intJ + 1] = strTempName;
         }
       }
     }
@@ -1383,9 +1383,9 @@ public class HasiniCPT {
       con.repaint();
       con.sleep(2000);
       System.out.println("Exiting");
-      String [] args = new String[1];
-      args[0] = "repeat";
-      main(args);
+      String [] strArgs = new String[1];
+      strArgs[0] = "repeat";
+      main(strArgs);
       return false;
     }
   }
@@ -1472,9 +1472,9 @@ public class HasiniCPT {
       if (intCurrentImageIndex == 8) { // At imgHelp10
         con.setTextColor(Color.WHITE);
         con.repaint();
-        String input = con.readLine();
+        String strInput = con.readLine();
 
-        if (input.equals("13")) {
+        if (strInput.equals("13")) {
           intCurrentImageIndex = 11; // Show imgHelp11
           con.drawImage(imgHelp11, 0, 0);
           con.repaint();
