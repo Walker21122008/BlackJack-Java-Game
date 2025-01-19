@@ -295,7 +295,8 @@ public class HasiniCPTNew {
 			}
 			// The code will continue to the main game loop after exiting the while loop
 		
-		//When the hidden black joke button is clicked
+		//When the hidden black joke button is clicked at the top right corner of the screen
+		//among us animation
 		}else if (isButtonClicked(con, 1240, 0, 40, 40)) {
             showGreenScreen = true;
             intYellowX = 0; // Reset yellow position when animation starts
@@ -694,90 +695,33 @@ public class HasiniCPTNew {
 	//reads the scoreboard file, create list, sort by scores and display top 10 scores
 	
 	private static void showHighScores(Console con) {
-		con.drawImage(imgScoreBoard, 0, 0);
-		con.repaint();
-		scoreBoardListInput = new TextInputFile("winners.txt");
-		
-		// Read top scores from file and display them
-		readTopScoresFromFile(con);
-		displayScores(con);
+		con.drawImage(imgScoreBoard, 0, 0); 
+         con.repaint();
+         scoreBoardListInput = new TextInputFile("winners.txt");
+         readScoresFromFileFinal(con);
+         sortScores(con);
+         displayScores(con);
 		
 		con.drawImage(imgBackButton, 1080, 520);
 		con.repaint();
 	}
 
-	// Method to read top scores from file
-	private static void readTopScoresFromFile(Console con) {
-		// Temporary storage for scores and names
-		String[] strTempNames = new String[100]; // Assuming a maximum of 100 entries
-		double[] dblTempScores = new double[100];
-		int intCount = 0;
-
-		// Read the file and populate temporary arrays
-		while (!scoreBoardListInput.eof()) {
-			String strName = scoreBoardListInput.readLine();
-			double strScore = Double.parseDouble(scoreBoardListInput.readLine());
-			
-			// Store names and scores in temporary arrays
-			strTempNames[intCount] = strName;
-			dblTempScores[intCount] = strScore;
-			intCount++;
-		}
-		
-		scoreBoardListInput.close();
-
-		// Determine the number of top scores to keep
-		int intActualCount = Math.min(intCount, intTOP_SCORES_COUNT);
-		
-		// Initialize top scores and names arrays
-		dblTopScores = new double[intTOP_SCORES_COUNT];
-		strTopNames = new String[intTOP_SCORES_COUNT];
-
-		// Populate top scores and names based on the temporary arrays
-		for (int intI = 0; intI < intActualCount; intI++) {
-			updateTopScores(strTempNames[intI], dblTempScores[intI]);
-		}
-	}
-
-	// Method to update the top scores
-	private static void updateTopScores(String strName, double dblScore) {
-		int intInsertIndex = -1;
-
-		// Find the position to insert the new score
-		for (int intI = 0; intI < intTOP_SCORES_COUNT; intI++) {
-			if (dblScore > dblTopScores[intI]) {
-				intInsertIndex = intI;
-				break;
-			}
-		}
-
-		// If we found a position to insert, shift existing entries
-		if (intInsertIndex != -1) {
-			for (int intI = intTOP_SCORES_COUNT - 1; intI > intInsertIndex; intI--) {
-				dblTopScores[intI] = dblTopScores[intI - 1];
-				strTopNames[intI] = strTopNames[intI - 1];
-			}
-			dblTopScores[intInsertIndex] = dblScore;
-			strTopNames[intInsertIndex] = strName;
-		}
-	}
-
+	
 	// Display total scores on the screen
 	private static void displayScores(Console con) {
 		Font font2 = new Font("Courier New", Font.BOLD, 20);
 		con.setDrawFont(font2);
 		
-		for (int intI = 0; intI < intTOP_SCORES_COUNT; intI++) {
-			if (dblTopScores[intI] != 0) { // Check if there is a valid score
-				con.setDrawColor(Color.WHITE);
-				if (intI < 5) {
-					con.drawString(strTopNames[intI] + ": " + dblTopScores[intI], 200, 180 + intI * 90);
-				} else {
-					con.drawString(strTopNames[intI] + ": " + dblTopScores[intI], 770, 180 + (intI - 5) * 92);
-				}
-				con.repaint();
-			}
-		}
+		for (int intI = 0; intI < Math.min(5, intScoreCount); intI++) {
+            con.setDrawColor(Color.WHITE);
+            con.drawString(strNames[intI] + ": " + dblScores[intI], 200, 180 + intI * 92);
+            con.repaint();
+        }
+        for (int intI = 5; intI < Math.min(10, intScoreCount); intI++) {
+            con.setDrawColor(Color.WHITE);
+            con.drawString(strNames[intI] + ": " + dblScores[intI], 770, 180 + (intI - 5) * 92);
+            con.repaint();
+        }
 	}
 
 
@@ -1436,7 +1380,7 @@ public class HasiniCPTNew {
 	
 	            con.sleep(16); // Add a small delay to prevent excessive CPU usage
 	        }
-	    } else {
+	    } else {//when the user loses all his/her money
 	        con.drawImage(imgNoMoney1, 0, 0);
 	        con.repaint();
 	        con.sleep(2000);
@@ -1444,6 +1388,9 @@ public class HasiniCPTNew {
 	        con.repaint();
 	        con.sleep(2000);
 	        System.out.println("Exiting");
+	        String [] args = new String[1];
+			args[0] = "repeat";
+			main(args);
 	        return false;
 	    }
 	}

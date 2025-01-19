@@ -30,10 +30,12 @@ hikaruNaru
 866.9
 hasini
 91.0
-9
-83.0
+Vijay
+2000
 hasiniiii
 910.0
+Hawaii
+1100
 hasini
 910.1
 hasini
@@ -56,3 +58,9 @@ statitan
 2000.0
 chloe
 603.0
+hasini
+100.0
+uwukitten
+1200.0
+vj
+3000.0
