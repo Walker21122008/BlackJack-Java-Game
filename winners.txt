@@ -64,3 +64,7 @@ uwukitten
 1200.0
 vj
 3000.0
+hatsune miku
+460.0
+mikuuu
+2610.0

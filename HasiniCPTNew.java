@@ -16,8 +16,8 @@ import java.awt.Font;
 import java.awt.image.*;
 
 public class HasiniCPTNew {
-	//Initializing global variables for the images, variables and lists
 	
+	//Initializing global variables for the images, variables and lists
     private static final int intBAR_WIDTH = 50;
     private static final int intBAR_HEIGHT = 20;
     private static final int intSCREEN_WIDTH = 1280;
