@@ -1,11 +1,14 @@
 /*
+ *-----------------------------------------------------------------------------------------
  *
  * Name: BlackJack
  * File Name: HasiniCPT.java
  * By: Hasini Vijay Inbasri
- * Date Created: Dec 21, 2024
+ * Github Account User: Clique_bait<3
+ * Date Created: January 21, 2025
  * Purpose: Fan-made game for the Webtoon comic - The Mafia Nanny focusing on Blackjack
  *
+ * -----------------------------------------------------------------------------------------
  */
 
 //import libraries
