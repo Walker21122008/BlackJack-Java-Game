@@ -19,6 +19,7 @@ Your goal? To beat Nico aka the Dealer and take home the loot! 💰💣
 Can you help Valentina beat her best friend?👀 
 
 **Gameplay video below**  ⬇⬇
+https://www.youtube.com/watch?v=JhHXAUHqvPk
 
 **Technology used**
 - Java
